@@ -4,7 +4,7 @@ project:
   wokwi_id: 0
 
   source_files:  # source files must be in ./src
-    - navray_top.sv
+    - weverest_top.sv
     - sqrt.sv
     - seg7.sv
   top_module:  "weverest_top"
