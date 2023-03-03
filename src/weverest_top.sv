@@ -1,8 +1,8 @@
 // Title:  Top-level wrapper in SystemVerilog
-// File:   navray_top.sv
-// Author: Wallace Everest
+// File:   weverest_top.sv
+// Author: Wallie Everest
 // Date:   23-NOV-2022
-// URL:    https://github.com/navray/tt02-square-root
+// URL:    https://github.com/wallieeverest/tt03
 //
 // Description:
 //   The square-root of an unsigned 7-bit input is displayed on a 7-segment output.
@@ -18,7 +18,7 @@
 
 localparam K_WIDTH = 8;  // size must be even
 
-module navray_top (
+module weverest_top (
   input  wire [7:0] io_in,
   output wire [7:0] io_out
 );

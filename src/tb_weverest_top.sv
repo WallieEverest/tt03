@@ -16,7 +16,7 @@ module tb_sqrt_gl ();
 
   assign io_in[0] = clk;
   
-  navray_top_gl navray_top_gl_dut (
+  weverest_top_gl navray_top_gl_dut (
     .vccd1 (vccd1),
     .vssd1 (vssd1),
     .io_in (io_in),
