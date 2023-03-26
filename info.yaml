@@ -4,10 +4,10 @@ project:
   wokwi_id: 0
 
   source_files:  # source files must be in ./src
-    - weverest_top.sv
-    - sqrt.sv
-    - seg7.sv
-  top_module:  "weverest_top"
+    - morningjava_top.v
+    - sqrt.v
+    - seg7.v
+  top_module:  "morningjava_top"
 
 # Keep a track of the submission yaml
 yaml_version: 3.0
@@ -17,7 +17,7 @@ yaml_version: 3.0
 documentation: 
   author:      "Wallie Everest"
   title:       "Chiptune"
-  language:    "SystemVerilog"
+  language:    "Verilog"
   description: Vintage 8-bit Sound Generator
 
 # Longer description of how the project works. You can use standard markdown format.

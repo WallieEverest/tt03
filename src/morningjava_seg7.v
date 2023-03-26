@@ -1,8 +1,8 @@
 // Title:  7-segment decoder for the TinyTapeout-02 PCB
-// File:   seg7.sv
+// File:   morningjava_seg7.v
 // Author: Wallace Everest
 // Date:   25-NOV-2022
-// URL:    https://github.com/navray/tt02-square-root
+// URL:    https://github.com/wallieeverest/tt03
 //
 // Description:
 //   Converts a 4-bit binary code to 7-segment hexadecimal
@@ -20,13 +20,13 @@
 
 `default_nettype none
 
-module seg7 (
+module morningjava_seg7 (
   input  wire       clk,
   input  wire [3:0] data_in,
   output reg  [7:0] segments
 );
-  always_ff @(posedge clk) begin : segment_decoder
-    unique case(data_in)
+  always @(posedge clk) begin : segment_decoder
+    case(data_in)
       // ext. connections:   pgfedcba
       4'h0:    segments = 8'b00111111;
       4'h1:    segments = 8'b00000110;
