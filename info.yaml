@@ -5,8 +5,8 @@ project:
 
   source_files:  # source files must be in ./src
     - morningjava_top.v
-    - sqrt.v
-    - seg7.v
+    - morningjava_sqrt.v
+    - morningjava_seg7.v
   top_module:  "morningjava_top"
 
 # Keep a track of the submission yaml
