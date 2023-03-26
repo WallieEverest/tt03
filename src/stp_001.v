@@ -75,10 +75,11 @@ module a_stp_001 ();
     forever begin
       //io_in[7:1] = 32;
       //$display("Input = %0d", io_in[7:1]);
-      repeat (5) @(negedge clk);
+      @(posedge ready);
+      inputs = inputs + 1;  // test vector
       //io_in[7:1] = 127;
       //$display("Input = %0d", io_in[7:1]);
-      repeat (5) @(negedge clk);
+      //repeat (5) @(negedge clk);
     end
   end
 

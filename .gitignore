@@ -3,6 +3,7 @@
 .vscode
 *.vcd
 runs
+temp
 sim/work
 sim/*.do
 sim/*.mti

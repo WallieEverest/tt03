@@ -13,200 +13,187 @@
 // limitations under the License.
 // SPDX-License-Identifier: Apache-2.0
 
-`default_nettype none
-/*
- *-------------------------------------------------------------
- *
- * user_project_wrapper
- *
- * This wrapper enumerates all of the pins available to the
- * user for the user project.
- *
- * An example user project is provided in this wrapper.  The
- * example should be removed and replaced with the actual
- * user project.
- *
- * THIS FILE HAS BEEN GENERATED USING multi_tools_project CODEGEN
- * IF YOU NEED TO MAKE EDITS TO IT, EDIT codegen/caravel_iface_header.txt
- *
- *-------------------------------------------------------------
- */
+`default_nettype wire
 
+// Wrapper for OpenLane Caravel projects
 module user_project_wrapper #(
-    parameter BITS = 32
+  parameter BITS = 32,
+  parameter MPRJ_IO_PADS = 38
 )(
 `ifdef USE_POWER_PINS
-    inout vdda1,       // User area 1 3.3V supply
-    inout vdda2,       // User area 2 3.3V supply
-    inout vssa1,       // User area 1 analog ground
-    inout vssa2,       // User area 2 analog ground
-    inout vccd1,       // User area 1 1.8V supply
-    inout vccd2,       // User area 2 1.8v supply
-    inout vssd1,       // User area 1 digital ground
-    inout vssd2,       // User area 2 digital ground
+  inout vdda1,  // User area 1 3.3V supply
+  inout vdda2,  // User area 2 3.3V supply
+  inout vssa1,  // User area 1 analog ground
+  inout vssa2,  // User area 2 analog ground
+  inout vccd1,  // User area 1 1.8V supply
+  inout vccd2,  // User area 2 1.8v supply
+  inout vssd1,  // User area 1 digital ground
+  inout vssd2,  // User area 2 digital ground
 `endif
-
-    // Wishbone Slave ports (WB MI A)
-    input wb_clk_i,
-    input wb_rst_i,
-    input wbs_stb_i,
-    input wbs_cyc_i,
-    input wbs_we_i,
-    input [3:0] wbs_sel_i,
-    input [31:0] wbs_dat_i,
-    input [31:0] wbs_adr_i,
-    output wbs_ack_o,
-    output [31:0] wbs_dat_o,
-
-    // Logic Analyzer Signals
-    input  [127:0] la_data_in,
-    output [127:0] la_data_out,
-    input  [127:0] la_oenb,
-
-    // IOs
-    input  [`MPRJ_IO_PADS-1:0] io_in,
-    output [`MPRJ_IO_PADS-1:0] io_out,
-    output [`MPRJ_IO_PADS-1:0] io_oeb,
-
-    // Analog (direct connection to GPIO pad---use with caution)
-    // Note that analog I/O is not available on the 7 lowest-numbered
-    // GPIO pads, and so the analog_io indexing is offset from the
-    // GPIO indexing by 7 (also upper 2 GPIOs do not have analog_io).
-    inout [`MPRJ_IO_PADS-10:0] analog_io,
-
-    // Independent clock (on independent integer divider)
-    input   user_clock2,
-
-    // User maskable interrupt signals
-    output [2:0] user_irq
+  input          wb_clk_i,               // Wishbone Slave ports (WB MI A)
+  input          wb_rst_i,
+  input  [127:0] la_data_in,             // Logic Analyzer Signals
+  input  [127:0] la_oenb,
+  input          user_clock2,            // Independent clock
+  input  [31:0]  wbs_adr_i,
+  input          wbs_cyc_i,
+  input  [31:0]  wbs_dat_i,
+  input  [3:0]   wbs_sel_i,
+  input          wbs_stb_i,
+  input          wbs_we_i,
+  output         wbs_ack_o,
+  output [127:0] la_data_out,
+  output [2:0]   user_irq,               // User maskable interrupt signals
+  output [31:0]  wbs_dat_o,
+  input  [MPRJ_IO_PADS-1:0]  io_in,      // IOs
+  inout  [MPRJ_IO_PADS-10:0] analog_io,  // Analog
+  output [MPRJ_IO_PADS-1:0]  io_out,
+  output [MPRJ_IO_PADS-1:0]  io_oeb
 );
 
-    // start of module instantiation
+  localparam K_NUM_DESIGNS = 249;  // 249 for TT03 ASIC, 4 for test FPGA
+  localparam K_NUM_IOS = 8;
 
-    wire sc_clk_out, sc_data_out, sc_latch_out, sc_scan_out;
-    wire sc_clk_in,  sc_data_in;
+  wire clk_out [0:K_NUM_DESIGNS];
+  wire data_out [0:K_NUM_DESIGNS];
+  wire scan_out [0:K_NUM_DESIGNS];
+  wire latch_out [0:K_NUM_DESIGNS];
 
-    scan_controller #(.NUM_DESIGNS(4)) scan_controller (
-      .clk                    (wb_clk_i),
-      .reset                  (wb_rst_i),
+  // Tiny Tapeout Scan Controller
+  scan_controller #(.NUM_DESIGNS(K_NUM_DESIGNS)) scan_controller (
+    .clk             (wb_clk_i),
+    .reset           (wb_rst_i),
+    .driver_sel      (io_in[9:8]),
+    .set_clk_div     (io_in[11]),
+    .active_select   (io_in[20:12]),
+    .inputs          (io_in[28:21]),
+    .slow_clk        (io_out[10]),
+    .outputs         (io_out[36:29]),
+    .ready           (io_out[37]),
+    .scan_clk_in     (clk_out[K_NUM_DESIGNS]),
+    .scan_data_in    (data_out[K_NUM_DESIGNS]),
+    .scan_clk_out    (clk_out[0]),
+    .scan_data_out   (data_out[0]),
+    .scan_select     (scan_out[0]),
+    .scan_latch_en   (latch_out[0]),
+    .la_scan_clk_in  (la_data_in[0]),
+    .la_scan_data_in (la_data_in[1]),
+    .la_scan_select  (la_data_in[2]),
+    .la_scan_latch_en(la_data_in[3]),
+    .la_scan_data_out(la_data_out[0]),
+    .oeb             (io_oeb)
+  );
 
-      .active_select          (io_in[20:12]),
-      .inputs                 (io_in[28:21]),
-      .outputs                (io_out[36:29]),
-      .ready                  (io_out[37]),
-      .slow_clk               (io_out[10]),
-      .set_clk_div            (io_in[11]),
+  // First project in chain ias a test module that inverts the input data
+  // [active_select = 000]
+  wire [K_NUM_IOS-1:0] test_module_data_in;
+  wire [K_NUM_IOS-1:0] test_module_data_out;
+  assign test_module_data_out = ~test_module_data_in;  // https://github.com/TinyTapeout/tt03-test-invert
+  scanchain_rtl #(.NUM_IOS(8)) scanchain_001 (
+    .clk_in          (clk_out[0]),
+    .data_in         (data_out[0]),
+    .scan_select_in  (scan_out[0]),
+    .latch_enable_in (latch_out[0]),
+    .clk_out         (clk_out[1]),
+    .data_out        (data_out[1]),
+    .scan_select_out (scan_out[1]),
+    .latch_enable_out(latch_out[1]),
+    .module_data_in  (test_module_data_in),
+    .module_data_out (test_module_data_out)
+  );
 
-      .scan_clk_out           (sc_clk_out),
-      .scan_clk_in            (sc_clk_in),
-      .scan_data_out          (sc_data_out),
-      .scan_data_in           (sc_data_in),
-      .scan_select            (sc_scan_out),
-      .scan_latch_en          (sc_latch_out),
+  // Device Under Test is located in the second scan position
+  // [active_select = 001]
+  wire [K_NUM_IOS-1:0] dut_module_data_in;
+  wire [K_NUM_IOS-1:0] dut_module_data_out;
+  scanchain_rtl #(.NUM_IOS(8)) scanchain_002 (
+    .clk_in          (clk_out[1]),
+    .data_in         (data_out[1]),
+    .scan_select_in  (scan_out[1]),
+    .latch_enable_in (latch_out[1]),
+    .clk_out         (clk_out[2]),
+    .data_out        (data_out[2]),
+    .scan_select_out (scan_out[2]),
+    .latch_enable_out(latch_out[2]),
+    .module_data_in  (dut_module_data_in),
+    .module_data_out (dut_module_data_out)
+  );
 
-      .la_scan_clk_in         (la_data_in[0]),
-      .la_scan_data_in        (la_data_in[1]),
-      .la_scan_data_out       (la_data_out[0]),
-      .la_scan_select         (la_data_in[2]),
-      .la_scan_latch_en       (la_data_in[3]),
+  // https://github.com/username/projectname
+  morningjava_top dut (
+    .io_in (dut_module_data_in),
+    .io_out(dut_module_data_out)
+  );
 
-      .driver_sel             (io_in[9:8]),
-
-      .oeb                    (io_oeb)
+  // Remaining projects in the scan chain pass through the input data
+  genvar i;
+  for (i = 3; i <= K_NUM_DESIGNS; i = i+1) begin : scanchain_gen
+    wire [K_NUM_IOS-1:0] loopback_data;
+    scanchain_rtl #(.NUM_IOS(K_NUM_IOS)) scanchain_fill (
+      .clk_in          (clk_out[i-1]),
+      .data_in         (data_out[i-1]),
+      .scan_select_in  (scan_out[i-1]),
+      .latch_enable_in (latch_out[i-1]),
+      .clk_out         (clk_out[i]),
+      .data_out        (data_out[i]),
+      .scan_select_out (scan_out[i]),
+      .latch_enable_out(latch_out[i]),
+      .module_data_in  (loopback_data),
+      .module_data_out (loopback_data)
     );
+  end
 
-    // [000] https://github.com/TinyTapeout/tt03-test-invert
-    wire sw_000_clk_out, sw_000_data_out, sw_000_scan_out, sw_000_latch_out;
-    wire [7:0] sw_000_module_data_in;
-    wire [7:0] sw_000_module_data_out;
-    scanchain #(.NUM_IOS(8)) scanchain_000 (
-      .clk_in          (sc_clk_out),
-      .data_in         (sc_data_out),
-      .scan_select_in  (sc_scan_out),
-      .latch_enable_in (sc_latch_out),
-      .clk_out         (sw_000_clk_out),
-      .data_out        (sw_000_data_out),
-      .scan_select_out (sw_000_scan_out),
-      .latch_enable_out(sw_000_latch_out),
-      .module_data_in  (sw_000_module_data_in),
-      .module_data_out (sw_000_module_data_out)
-    );
+endmodule	: user_project_wrapper
 
-    user_module_357464855584307201 user_module_357464855584307201_000 (
-      .io_in  (sw_000_module_data_in),
-      .io_out (sw_000_module_data_out)
-    );
+//-------------//
+// scanchain.v //
+//-------------//
 
-    // [001] https://github.com/WallieEverest/tt03
-    wire sw_001_clk_out, sw_001_data_out, sw_001_scan_out, sw_001_latch_out;
-    wire [7:0] sw_001_module_data_in;
-    wire [7:0] sw_001_module_data_out;
-    scanchain #(.NUM_IOS(8)) scanchain_001 (
-      .clk_in          (sw_000_clk_out),
-      .data_in         (sw_000_data_out),
-      .scan_select_in  (sw_000_scan_out),
-      .latch_enable_in (sw_000_latch_out),
-      .clk_out         (sw_001_clk_out),
-      .data_out        (sw_001_data_out),
-      .scan_select_out (sw_001_scan_out),
-      .latch_enable_out(sw_001_latch_out),
-      .module_data_in  (sw_001_module_data_in),
-      .module_data_out (sw_001_module_data_out)
-    );
+// RTL version of scanchain.v that used sky130 primitives
+module scanchain_rtl #(
+  parameter NUM_IOS = 8
+)(
+  input  wire clk_in,
+  input  wire data_in,
+  input  wire scan_select_in,
+  input  wire latch_enable_in,
+  input  wire [NUM_IOS-1:0] module_data_out,
+  output wire clk_out,
+  output wire data_out,
+  output wire scan_select_out,
+  output wire latch_enable_out,
+  output reg [NUM_IOS-1:0] module_data_in
+);
 
-    morningjava_top morningjava_top_001 (
-      .io_in  (sw_001_module_data_in),
-      .io_out (sw_001_module_data_out)
-    );
+  wire clk;
+  reg data_out_i;
+  reg [NUM_IOS-1:0] scan_data_out;  // output of the each scan chain flop
+  reg [NUM_IOS-1:0] scan_data_in;   // input of each scan chain flop
 
-    // [002] https://github.com/icegoat9/tinytapeout03-7seglife
-    wire sw_002_clk_out, sw_002_data_out, sw_002_scan_out, sw_002_latch_out;
-    wire [7:0] sw_002_module_data_in;
-    wire [7:0] sw_002_module_data_out;
-    scanchain #(.NUM_IOS(8)) scanchain_002 (
-      .clk_in          (sw_001_clk_out),
-      .data_in         (sw_001_data_out),
-      .scan_select_in  (sw_001_scan_out),
-      .latch_enable_in (sw_001_latch_out),
-      .clk_out         (sw_002_clk_out),
-      .data_out        (sw_002_data_out),
-      .scan_select_out (sw_002_scan_out),
-      .latch_enable_out(sw_002_latch_out),
-      .module_data_in  (sw_002_module_data_in),
-      .module_data_out (sw_002_module_data_out)
-    );
+  assign clk = clk_in;
+  assign clk_out = clk;
+  assign data_out = data_out_i;
+  assign scan_select_out = scan_select_in;
+  assign latch_enable_out = latch_enable_in;
 
-    user_module_357464855584307201 user_module_357752736742764545_002 (
-        .io_in  (sw_002_module_data_in),
-        .io_out (sw_002_module_data_out)
-    );
+  always @(*) begin : primitive_logic
+    scan_data_in <= {scan_data_out[NUM_IOS-2:0], data_in};
+  end
 
-    // [003] https://github.com/TinyTapeout/tt03-test-invert
-    wire sw_249_clk_out, sw_249_data_out, sw_249_scan_out, sw_249_latch_out;
-    wire [7:0] sw_249_module_data_in;
-    wire [7:0] sw_249_module_data_out;
-    scanchain #(.NUM_IOS(8)) scanchain_249 (
-      .clk_in          (sw_002_clk_out),
-      .data_in         (sw_002_data_out),
-      .scan_select_in  (sw_002_scan_out),
-      .latch_enable_in (sw_002_latch_out),
-      .clk_out         (sw_249_clk_out),
-      .data_out        (sw_249_data_out),
-      .scan_select_out (sw_249_scan_out),
-      .latch_enable_out(sw_249_latch_out),
-      .module_data_in  (sw_249_module_data_in),
-      .module_data_out (sw_249_module_data_out)
-    );
+  always @(negedge clk) begin : out_flop
+    data_out_i <= (scan_data_out[NUM_IOS-1]);
+  end
 
-    user_module_357464855584307201 user_module_357464855584307201_003 (
-      .io_in  (sw_249_module_data_in),
-      .io_out (sw_249_module_data_out)
-    );
+  always @(posedge clk) begin : scan_flop
+    if (scan_select_in)
+      scan_data_out <= module_data_out;
+    else 
+      scan_data_out <= scan_data_in;
+  end
 
-    // Connect final signals back to the scan controller
-    assign sc_clk_in  = sw_249_clk_out;
-    assign sc_data_in = sw_249_data_out;
+  always @(latch_enable_in or scan_data_out) begin : latch
+    if (latch_enable_in) 
+      module_data_in <= scan_data_out;
+  end
 
-    // end of module instantiation
-
-endmodule	// user_project_wrapper
+endmodule
