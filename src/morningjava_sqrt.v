@@ -43,11 +43,17 @@ module morningjava_sqrt #(
     assign  x    = {r[i][G_WIDTH/2-1:0], d[i][G_WIDTH-1:G_WIDTH-2]};
     assign  y    = {q[i], sign, 1'b1};
     assign  alu  = (sign == 1'b0) ? (x - y) : (x + y);
+    
+    initial begin : sqrt_init
+      d[i+1] = '0;
+      q[i+1] = '0;
+      r[i+1] = '0;
+    end;
 
     always @(posedge clk) begin : sqrt_reg
       d[i+1] <= {d[i][G_WIDTH-3:0], 2'b0};  // left shift 2-bit
       q[i+1] <= {q[i][G_WIDTH/2-2:0], ~alu[G_WIDTH/2+1]};  // left shift 1-bit
       r[i+1] <= alu;
-    end : sqrt_reg;
+    end;
   end
 endmodule

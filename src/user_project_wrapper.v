@@ -86,32 +86,33 @@ module user_project_wrapper #(
     wire sc_clk_out, sc_data_out, sc_latch_out, sc_scan_out;
     wire sc_clk_in,  sc_data_in;
 
-    scan_controller #(.NUM_DESIGNS(250)) scan_controller (
-       .clk                    (wb_clk_i),
-       .reset                  (wb_rst_i),
-       .active_select          (io_in[20:12]),
-       .inputs                 (io_in[28:21]),
-       .outputs                (io_out[36:29]),
-       .ready                  (io_out[37]),
-       .slow_clk               (io_out[10]),
-       .set_clk_div            (io_in[11]),
+    scan_controller #(.NUM_DESIGNS(4)) scan_controller (
+      .clk                    (wb_clk_i),
+      .reset                  (wb_rst_i),
 
-       .scan_clk_out           (sc_clk_out),
-       .scan_clk_in            (sc_clk_in),
-       .scan_data_out          (sc_data_out),
-       .scan_data_in           (sc_data_in),
-       .scan_select            (sc_scan_out),
-       .scan_latch_en          (sc_latch_out),
+      .active_select          (io_in[20:12]),
+      .inputs                 (io_in[28:21]),
+      .outputs                (io_out[36:29]),
+      .ready                  (io_out[37]),
+      .slow_clk               (io_out[10]),
+      .set_clk_div            (io_in[11]),
 
-       .la_scan_clk_in         (la_data_in[0]),
-       .la_scan_data_in        (la_data_in[1]),
-       .la_scan_data_out       (la_data_out[0]),
-       .la_scan_select         (la_data_in[2]),
-       .la_scan_latch_en       (la_data_in[3]),
+      .scan_clk_out           (sc_clk_out),
+      .scan_clk_in            (sc_clk_in),
+      .scan_data_out          (sc_data_out),
+      .scan_data_in           (sc_data_in),
+      .scan_select            (sc_scan_out),
+      .scan_latch_en          (sc_latch_out),
 
-       .driver_sel             (io_in[9:8]),
+      .la_scan_clk_in         (la_data_in[0]),
+      .la_scan_data_in        (la_data_in[1]),
+      .la_scan_data_out       (la_data_out[0]),
+      .la_scan_select         (la_data_in[2]),
+      .la_scan_latch_en       (la_data_in[3]),
 
-       .oeb                    (io_oeb)
+      .driver_sel             (io_in[9:8]),
+
+      .oeb                    (io_oeb)
     );
 
     // [000] https://github.com/TinyTapeout/tt03-test-invert
@@ -119,21 +120,21 @@ module user_project_wrapper #(
     wire [7:0] sw_000_module_data_in;
     wire [7:0] sw_000_module_data_out;
     scanchain #(.NUM_IOS(8)) scanchain_000 (
-        .clk_in          (sc_clk_out),
-        .data_in         (sc_data_out),
-        .scan_select_in  (sc_scan_out),
-        .latch_enable_in (sc_latch_out),
-        .clk_out         (sw_000_clk_out),
-        .data_out        (sw_000_data_out),
-        .scan_select_out (sw_000_scan_out),
-        .latch_enable_out(sw_000_latch_out),
-        .module_data_in  (sw_000_module_data_in),
-        .module_data_out (sw_000_module_data_out)
+      .clk_in          (sc_clk_out),
+      .data_in         (sc_data_out),
+      .scan_select_in  (sc_scan_out),
+      .latch_enable_in (sc_latch_out),
+      .clk_out         (sw_000_clk_out),
+      .data_out        (sw_000_data_out),
+      .scan_select_out (sw_000_scan_out),
+      .latch_enable_out(sw_000_latch_out),
+      .module_data_in  (sw_000_module_data_in),
+      .module_data_out (sw_000_module_data_out)
     );
 
     user_module_357464855584307201 user_module_357464855584307201_000 (
-        .io_in  (sw_000_module_data_in),
-        .io_out (sw_000_module_data_out)
+      .io_in  (sw_000_module_data_in),
+      .io_out (sw_000_module_data_out)
     );
 
     // [001] https://github.com/WallieEverest/tt03
@@ -141,21 +142,21 @@ module user_project_wrapper #(
     wire [7:0] sw_001_module_data_in;
     wire [7:0] sw_001_module_data_out;
     scanchain #(.NUM_IOS(8)) scanchain_001 (
-        .clk_in          (sw_000_clk_out),
-        .data_in         (sw_000_data_out),
-        .scan_select_in  (sw_000_scan_out),
-        .latch_enable_in (sw_000_latch_out),
-        .clk_out         (sw_001_clk_out),
-        .data_out        (sw_001_data_out),
-        .scan_select_out (sw_001_scan_out),
-        .latch_enable_out(sw_001_latch_out),
-        .module_data_in  (sw_001_module_data_in),
-        .module_data_out (sw_001_module_data_out)
+      .clk_in          (sw_000_clk_out),
+      .data_in         (sw_000_data_out),
+      .scan_select_in  (sw_000_scan_out),
+      .latch_enable_in (sw_000_latch_out),
+      .clk_out         (sw_001_clk_out),
+      .data_out        (sw_001_data_out),
+      .scan_select_out (sw_001_scan_out),
+      .latch_enable_out(sw_001_latch_out),
+      .module_data_in  (sw_001_module_data_in),
+      .module_data_out (sw_001_module_data_out)
     );
 
-    morningjava_top weverest_top_001 (
-        .io_in  (sw_001_module_data_in),
-        .io_out (sw_001_module_data_out)
+    morningjava_top morningjava_top_001 (
+      .io_in  (sw_001_module_data_in),
+      .io_out (sw_001_module_data_out)
     );
 
     // [002] https://github.com/icegoat9/tinytapeout03-7seglife
@@ -163,16 +164,16 @@ module user_project_wrapper #(
     wire [7:0] sw_002_module_data_in;
     wire [7:0] sw_002_module_data_out;
     scanchain #(.NUM_IOS(8)) scanchain_002 (
-        .clk_in          (sw_001_clk_out),
-        .data_in         (sw_001_data_out),
-        .scan_select_in  (sw_001_scan_out),
-        .latch_enable_in (sw_001_latch_out),
-        .clk_out         (sw_002_clk_out),
-        .data_out        (sw_002_data_out),
-        .scan_select_out (sw_002_scan_out),
-        .latch_enable_out(sw_002_latch_out),
-        .module_data_in  (sw_002_module_data_in),
-        .module_data_out (sw_002_module_data_out)
+      .clk_in          (sw_001_clk_out),
+      .data_in         (sw_001_data_out),
+      .scan_select_in  (sw_001_scan_out),
+      .latch_enable_in (sw_001_latch_out),
+      .clk_out         (sw_002_clk_out),
+      .data_out        (sw_002_data_out),
+      .scan_select_out (sw_002_scan_out),
+      .latch_enable_out(sw_002_latch_out),
+      .module_data_in  (sw_002_module_data_in),
+      .module_data_out (sw_002_module_data_out)
     );
 
     user_module_357464855584307201 user_module_357752736742764545_002 (
@@ -180,26 +181,26 @@ module user_project_wrapper #(
         .io_out (sw_002_module_data_out)
     );
 
-    // [249] https://github.com/TinyTapeout/tt03-test-invert
+    // [003] https://github.com/TinyTapeout/tt03-test-invert
     wire sw_249_clk_out, sw_249_data_out, sw_249_scan_out, sw_249_latch_out;
     wire [7:0] sw_249_module_data_in;
     wire [7:0] sw_249_module_data_out;
     scanchain #(.NUM_IOS(8)) scanchain_249 (
-        .clk_in          (sw_002_clk_out),
-        .data_in         (sw_002_data_out),
-        .scan_select_in  (sw_002_scan_out),
-        .latch_enable_in (sw_002_latch_out),
-        .clk_out         (sw_249_clk_out),
-        .data_out        (sw_249_data_out),
-        .scan_select_out (sw_249_scan_out),
-        .latch_enable_out(sw_249_latch_out),
-        .module_data_in  (sw_249_module_data_in),
-        .module_data_out (sw_249_module_data_out)
+      .clk_in          (sw_002_clk_out),
+      .data_in         (sw_002_data_out),
+      .scan_select_in  (sw_002_scan_out),
+      .latch_enable_in (sw_002_latch_out),
+      .clk_out         (sw_249_clk_out),
+      .data_out        (sw_249_data_out),
+      .scan_select_out (sw_249_scan_out),
+      .latch_enable_out(sw_249_latch_out),
+      .module_data_in  (sw_249_module_data_in),
+      .module_data_out (sw_249_module_data_out)
     );
 
-    user_module_357464855584307201 user_module_357464855584307201_249 (
-        .io_in  (sw_249_module_data_in),
-        .io_out (sw_249_module_data_out)
+    user_module_357464855584307201 user_module_357464855584307201_003 (
+      .io_in  (sw_249_module_data_in),
+      .io_out (sw_249_module_data_out)
     );
 
     // Connect final signals back to the scan controller
@@ -209,4 +210,3 @@ module user_project_wrapper #(
     // end of module instantiation
 
 endmodule	// user_project_wrapper
-`default_nettype wire
