@@ -18,14 +18,14 @@
 //    -- d --  (p)
 //
 
-`default_nettype none
+//`default_nettype none
 
 module morningjava_seg7 (
   input  wire       clk,
   input  wire [3:0] data_in,
-  output reg  [7:0] segments
+  output reg  [7:0] segments = 8'b0
 );
-  initial segments = '0;
+  //initial segments = 8'b0;
 
   always @(posedge clk) begin : segment_decoder
     case(data_in)

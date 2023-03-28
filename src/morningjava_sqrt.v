@@ -30,24 +30,27 @@ module morningjava_sqrt #(
   reg signed [G_WIDTH/2+1:0] r [G_WIDTH/2+1:0];
 
   assign data_out = q[G_WIDTH/2];
-  assign d[0] = data_in;
-  assign q[0] = '0;
-  assign r[0] = '0;
+  
+  always @(*) begin
+    d[0] <= data_in;
+    q[0] <= 4'b0;
+    r[0] <= 4'b0;
+  end
 
   genvar i;
   for (i = 0; i < (G_WIDTH/2); i = i+1) begin : sqrt_gen
     wire sign;
     wire signed [G_WIDTH/2+1:0] x, y, alu;
 
-    assign  sign = r[i][G_WIDTH/2+1];  // sign of R is operand
-    assign  x    = {r[i][G_WIDTH/2-1:0], d[i][G_WIDTH-1:G_WIDTH-2]};
-    assign  y    = {q[i], sign, 1'b1};
-    assign  alu  = (sign == 1'b0) ? (x - y) : (x + y);
+    assign sign = r[i][G_WIDTH/2+1];  // sign of R is operand
+    assign x    = {r[i][G_WIDTH/2-1:0], d[i][G_WIDTH-1:G_WIDTH-2]};
+    assign y    = {q[i], sign, 1'b1};
+    assign alu  = (sign == 1'b0) ? (x - y) : (x + y);
     
     initial begin : sqrt_init
-      d[i+1] = '0;
-      q[i+1] = '0;
-      r[i+1] = '0;
+      d[i+1] = 4'b0;
+      q[i+1] = 4'b0;
+      r[i+1] = 4'b0;
     end;
 
     always @(posedge clk) begin : sqrt_reg

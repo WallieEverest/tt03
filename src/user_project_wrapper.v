@@ -13,45 +13,35 @@
 // limitations under the License.
 // SPDX-License-Identifier: Apache-2.0
 
-`default_nettype wire
+//`default_nettype none
 
 // Wrapper for OpenLane Caravel projects
 module user_project_wrapper #(
   parameter BITS = 32,
   parameter MPRJ_IO_PADS = 38
 )(
-`ifdef USE_POWER_PINS
-  inout vdda1,  // User area 1 3.3V supply
-  inout vdda2,  // User area 2 3.3V supply
-  inout vssa1,  // User area 1 analog ground
-  inout vssa2,  // User area 2 analog ground
-  inout vccd1,  // User area 1 1.8V supply
-  inout vccd2,  // User area 2 1.8v supply
-  inout vssd1,  // User area 1 digital ground
-  inout vssd2,  // User area 2 digital ground
-`endif
-  input          wb_clk_i,               // Wishbone Slave ports (WB MI A)
-  input          wb_rst_i,
-  input  [127:0] la_data_in,             // Logic Analyzer Signals
-  input  [127:0] la_oenb,
-  input          user_clock2,            // Independent clock
-  input  [31:0]  wbs_adr_i,
-  input          wbs_cyc_i,
-  input  [31:0]  wbs_dat_i,
-  input  [3:0]   wbs_sel_i,
-  input          wbs_stb_i,
-  input          wbs_we_i,
-  output         wbs_ack_o,
-  output [127:0] la_data_out,
-  output [2:0]   user_irq,               // User maskable interrupt signals
-  output [31:0]  wbs_dat_o,
-  input  [MPRJ_IO_PADS-1:0]  io_in,      // IOs
-  inout  [MPRJ_IO_PADS-10:0] analog_io,  // Analog
-  output [MPRJ_IO_PADS-1:0]  io_out,
-  output [MPRJ_IO_PADS-1:0]  io_oeb
+  input  wire         wb_clk_i,               // Wishbone Slave ports (WB MI A)
+  input  wire         wb_rst_i,
+  input  wire [127:0] la_data_in,             // Logic Analyzer Signals
+  input  wire [127:0] la_oenb,
+  input  wire         user_clock2,            // Independent clock
+  input  wire [31:0]  wbs_adr_i,
+  input  wire         wbs_cyc_i,
+  input  wire [31:0]  wbs_dat_i,
+  input  wire [3:0]   wbs_sel_i,
+  input  wire         wbs_stb_i,
+  input  wire         wbs_we_i,
+  output wire         wbs_ack_o,
+  output wire [127:0] la_data_out,
+  output wire [2:0]   user_irq,               // User maskable interrupt signals
+  output wire [31:0]  wbs_dat_o,
+  input  wire [MPRJ_IO_PADS-1:0]  io_in,      // IOs
+  inout  wire [MPRJ_IO_PADS-10:0] analog_io,  // Analog
+  output wire [MPRJ_IO_PADS-1:0]  io_out,
+  output wire [MPRJ_IO_PADS-1:0]  io_oeb
 );
 
-  localparam K_NUM_DESIGNS = 249;  // 249 for TT03 ASIC, 4 for test FPGA
+  localparam K_NUM_DESIGNS = 25;  // 249 for TT03 ASIC, 4 for test FPGA
   localparam K_NUM_IOS = 8;
 
   wire clk_out [0:K_NUM_DESIGNS];
@@ -59,8 +49,15 @@ module user_project_wrapper #(
   wire scan_out [0:K_NUM_DESIGNS];
   wire latch_out [0:K_NUM_DESIGNS];
 
+  assign io_out[9:0]        = 10'b0;
+  assign io_out[28:11]      = 18'b0;
+  assign wbs_ack_o          = 1'b0;
+  assign user_irq           = 3'b0;
+  assign wbs_dat_o          = 32'b0;
+  assign la_data_out[127:1] = 127'b0;
+
   // Tiny Tapeout Scan Controller
-  scan_controller #(.NUM_DESIGNS(K_NUM_DESIGNS)) scan_controller (
+  scan_controller #(.NUM_DESIGNS(K_NUM_DESIGNS)) scan_controller_inst (
     .clk             (wb_clk_i),
     .reset           (wb_rst_i),
     .driver_sel      (io_in[9:8]),
@@ -143,13 +140,15 @@ module user_project_wrapper #(
     );
   end
 
-endmodule	: user_project_wrapper
+endmodule
 
 //-------------//
 // scanchain.v //
 //-------------//
 
 // RTL version of scanchain.v that used sky130 primitives
+// Attributes are for Lattice version of Synplify
+(* syn_hier="fixed" *)
 module scanchain_rtl #(
   parameter NUM_IOS = 8
 )(
@@ -159,41 +158,39 @@ module scanchain_rtl #(
   input  wire latch_enable_in,
   input  wire [NUM_IOS-1:0] module_data_out,
   output wire clk_out,
-  output wire data_out,
+  output reg  data_out,
   output wire scan_select_out,
   output wire latch_enable_out,
   output reg [NUM_IOS-1:0] module_data_in
 );
 
-  wire clk;
-  reg data_out_i;
-  reg [NUM_IOS-1:0] scan_data_out;  // output of the each scan chain flop
-  reg [NUM_IOS-1:0] scan_data_in;   // input of each scan chain flop
+  (* syn_keep=1 *) wire clk_n;
+  (* syn_keep=1 *) wire scan_select_out_i;
+  (* syn_keep=1 *) wire latch_enable_out_i;
+  reg [NUM_IOS-1:0] scan_data_out = 8'b0;  // output of the each scan chain flop
 
-  assign clk = clk_in;
-  assign clk_out = clk;
-  assign data_out = data_out_i;
-  assign scan_select_out = scan_select_in;
-  assign latch_enable_out = latch_enable_in;
+  // Balance the delays through the module
+  assign clk_n   = ~clk_in;
+  assign clk_out = ~clk_n;
+  assign scan_select_out_i  = scan_select_in;
+  assign scan_select_out    = scan_select_out_i;
+  assign latch_enable_out_i = latch_enable_in;
+  assign latch_enable_out   = latch_enable_out_i;
 
-  always @(*) begin : primitive_logic
-    scan_data_in <= {scan_data_out[NUM_IOS-2:0], data_in};
-  end
-
-  always @(negedge clk) begin : out_flop
-    data_out_i <= (scan_data_out[NUM_IOS-1]);
-  end
-
-  always @(posedge clk) begin : scan_flop
+  always @(negedge clk_n) begin : scan_flop
     if (scan_select_in)
       scan_data_out <= module_data_out;
     else 
-      scan_data_out <= scan_data_in;
+      scan_data_out <= {scan_data_out[NUM_IOS-2:0], data_in};
   end
 
   always @(latch_enable_in or scan_data_out) begin : latch
     if (latch_enable_in) 
       module_data_in <= scan_data_out;
+  end
+
+  always @(posedge clk_n) begin : out_flop
+    data_out <= (scan_data_out[NUM_IOS-1]);
   end
 
 endmodule

@@ -4,6 +4,8 @@
 *.vcd
 runs
 temp
+reference
+caravel
 sim/work
 sim/*.do
 sim/*.mti
