@@ -32,6 +32,7 @@ After that, the action uses the open source ASIC tool called [OpenLane](https://
 * [Caravel](https://caravel-harness.readthedocs.io/en/latest/)
 
 | Signal      | Name                        | Dir | WCSP | QFN | PCB |
+|---          |---                          |---  |---   |---  |---  |
 | mprj_io[0]  | JTAG                        | In  | D7   | TBD | TBD |
 | mprj_io[1]  | SDO                         | Out | E9   | TBD | TBD |
 | mprj_io[2]  | SDI                         | In  | F9   | TBD | TBD |
