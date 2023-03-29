@@ -31,6 +31,7 @@ After that, the action uses the open source ASIC tool called [OpenLane](https://
 * [Join the community](https://discord.gg/rPK2nSjxy8)
 * [Caravel](https://caravel-harness.readthedocs.io/en/latest/)
 
+## Pin Assignments
 | Signal      | Name                          | Dir | WCSP | QFN | PCB   |
 |---          |---                            |---  |---   |---  |---    |
 | mprj_io[0]  | JTAG                          | In  | D7   | 31  | J3.14 |
