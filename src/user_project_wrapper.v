@@ -13,7 +13,7 @@
 // limitations under the License.
 // SPDX-License-Identifier: Apache-2.0
 
-//`default_nettype none
+`default_nettype none
 
 // Wrapper for OpenLane Caravel projects
 module user_project_wrapper #(
@@ -41,7 +41,7 @@ module user_project_wrapper #(
   output wire [MPRJ_IO_PADS-1:0]  io_oeb
 );
 
-  localparam K_NUM_DESIGNS = 25;  // 249 for TT03 ASIC, 4 for test FPGA
+  localparam K_NUM_DESIGNS = 25;  // 250 for TT03 ASIC, 4 for test FPGA
   localparam K_NUM_IOS = 8;
 
   wire clk_out [0:K_NUM_DESIGNS];

@@ -18,7 +18,7 @@
 //    -- d --  (p)
 //
 
-//`default_nettype none
+`default_nettype none
 
 module morningjava_seg7 (
   input  wire       clk,

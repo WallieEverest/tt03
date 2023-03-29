@@ -1,3 +1,4 @@
+`default_nettype none
 
 module scan_controller #(
   parameter integer NUM_DESIGNS  = 498,

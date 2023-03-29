@@ -14,7 +14,7 @@
 // Stye Guide:
 //   https://github.com/lowRISC/style-guides/blob/master/VerilogCodingStyle.md
 
-//`default_nettype none
+`default_nettype none
 
 module morningjava_top (
   input  wire [7:0] io_in,

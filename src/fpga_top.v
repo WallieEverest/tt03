@@ -7,6 +7,8 @@
 // Description:
 // Implementation:
 
+`default_nettype none
+
 module fpga_top (
   input  wire       CLK,      // PIO_3[0]
   input  wire       RESET_N,  // pin 81
