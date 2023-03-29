@@ -33,7 +33,7 @@ After that, the action uses the open source ASIC tool called [OpenLane](https://
 
 ## Pin Assignments
 | Signal      | Name                          | Dir | WCSP | QFN | PCB   |
-|---          |---                            |---  |---   |---  |---    |
+| ----------- | ----------------------------- |---- |----- |---- |------ |
 | mprj_io[0]  | JTAG                          | In  | D7   | 31  | J3.14 |
 | mprj_io[1]  | SDO                           | Out | E9   | 32  | J3.13 |
 | mprj_io[2]  | SDI                           | In  | F9   | 33  | J3.12 |
