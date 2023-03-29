@@ -32,7 +32,6 @@ After that, the action uses the open source ASIC tool called [OpenLane](https://
 * [Caravel](https://caravel-harness.readthedocs.io/en/latest/)
 
 | Signal      | Name                        | Dir | WCSP | QFN | PCB |
-|---          |---                          |---  |---   |---  |---  |
 | mprj_io[0]  | JTAG                        | In  | D7   | TBD | TBD |
 | mprj_io[1]  | SDO                         | Out | E9   | TBD | TBD |
 | mprj_io[2]  | SDI                         | In  | F9   | TBD | TBD |
@@ -42,7 +41,7 @@ After that, the action uses the open source ASIC tool called [OpenLane](https://
 | mprj_io[6]  | SER_TX                      | Out | F7   | TBD | TBD |
 | mprj_io[7]  | IRQ                         | In  | E5   | TBD | TBD |
 | mprj_io[8]  | DRIVER_SEL[0]               | In  | F5   | TBD | TBD |
-| mprj_io[9]  | DRIVER_SEL[0]               | In  | E4   | TBD | TBD |
+| mprj_io[9]  | DRIVER_SEL[1]               | In  | E4   | TBD | TBD |
 | mprj_io[10] | SLOW_CLK                    | Out | F4   | TBD | TBD |
 | mprj_io[11] | SET_CLK_DIV                 | In  | E3   | TBD | TBD |
 | mprj_io[12] | ACTIVE_SELECT[0]            | In  | F3   | TBD | TBD |
