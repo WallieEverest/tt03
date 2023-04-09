@@ -1,37 +1,63 @@
-// Title:  Top-level FPGA wrapper in Verilog
-// File:   fpga_top.v
-// Author: Wallie Everest
-// Date:   26-MAR-2023
-// URL:    https://github.com/wallieeverest/tt03
+// Title:   Top-level FPGA wrapper
+// File:    fpga_top.v
+// Author:  Wallie Everest
+// Date:    26-MAR-2023
+// URL:     https://github.com/wallieeverest/scanchain_v2
+// License: Apache 2.0
 //
-// Description:
-// Implementation:
+// Description: Test of a Tiny Tapeout project on an FPGA evaluation board.
+// Implementation: Targets a Lattice iCEstick Evaluation Kit with an iCE40HX1K-TQ100.
+// The COM port is the latter selection of the two FTDI ports.
 
 `default_nettype none
 
 module fpga_top (
-  input  wire       CLK,      // PIO_3[0]
-  input  wire       RESET_N,  // pin 81
-  input  wire       RTS,      // pin 7
-  input  wire       RX,       // pin 9
-  input  wire [7:0] INPUTS,   // PIO_0[9:2], pull up
-  output wire [7:0] OUTPUTS,  // PIO_2[10:7]
-  output wire       READY,    // pin 78
-  output wire       LED0,     // pin 99
-  output wire       LED1,     // pin 98
-  output wire       LED2,     // pin 97
-  output wire       LED3,     // pin 96
-  output wire       LED4,     // pin 95
-  output wire       TX        // pin 8
+  input  wire       CLK,     // PIO_3[0], pin 21 (ICE_CLK)
+  input  wire       TRST,    // PIO_3[4], pin 3  (RS232_DTRn)
+  input  wire       MODE,    // PIO_1[9], pin 91 (pullup)
+  input  wire       RX,      // PIO_3[8], pin 9  (RS232_RX)
+  input  wire       TMS,     // PIO_3[6], pin 7  (RS232_RTSn)
+  input  wire [7:0] I_DATA,  // PIO_0[9:2]       (pullup)
+  output wire [7:0] O_DATA,  // PIO_2[10:17]
+  output wire       TCK,     // PIO_1[2], pin 78
+  output wire       TDI,     // PIO_1[3], pin 79
+  output wire       TDO,     // PIO_1[4], pin 80
+  output wire       RTCK,    // PIO_1[5], pin 81
+  output wire       TX,      // PIO_3[7], pin 8  (RS232_TX)
+  output wire [4:0] LED      // PIO_1[10:14]
 );
 
-  wire reset;
-  wire [37:0] io_in;
-  wire [37:0] io_out;
+  localparam MPRJ_IO_PADS = 38;
+  wire [MPRJ_IO_PADS-1:0] io_in;
+  wire [MPRJ_IO_PADS-1:0] io_out;
+  wire blink;
+  wire link;
 
-  user_project_wrapper dut(
+  // Evaluation board features
+  assign LED[0] = 1;      // D1, power
+  assign LED[1] = TMS;    // D2, test enable from COM
+  assign LED[2] = TRST;   // D3, reset from COM
+  assign LED[3] = link;   // D4, RX activity status
+  assign LED[4] = blink;  // D5, 1 Hz blink
+  
+  // Connections via the Caravel wrapper
+  assign io_in[7:0]   = 0;        // Caravel reserved
+  assign io_in[8]     = MODE;     // mode selection [0: auto, 1: UART]
+  assign io_in[9]     = TMS;      // test mode select
+  assign io_in[10]    = 0;        // shared with outputs
+  assign io_in[11]    = TCK;      // test clock
+  assign io_in[19:12] = 8'd2;     // project index
+  assign io_in[20]    = RX;       // test input data
+  assign io_in[28:21] = I_DATA;   // input pins to projects
+  assign io_in[37:29] = 0;        // shared with outputs
+  assign RTCK   = io_out[10];     // test clock out
+  assign O_DATA = io_out[36:29];  // output pins from projects
+  assign TDO    = io_out[37];     // test data output
+  assign TX     = io_out[37];     // serial data to host
+
+  user_project_wrapper #(.MPRJ_IO_PADS(MPRJ_IO_PADS)) dut (
     .wb_clk_i   (CLK),
-    .wb_rst_i   (reset),
+    .wb_rst_i   (TRST),
     .wbs_adr_i  (32'b0),
     .wbs_cyc_i  (1'b0),
     .wbs_dat_i  (32'b0),
@@ -51,21 +77,16 @@ module fpga_top (
     .io_oeb     ()
   );
 
-  assign reset        = ~RESET_N;
-  assign io_in[7:0]   = 8'b0;
-  assign io_in[9:8]   = 2'b10;    // internal scan state machine mode selection
-  assign io_in[10]    = 1'b0;
-  assign io_in[11]    = 1'b0;    // debug clock configuration
-  assign io_in[20:12] = 9'b0;    // project index selection
-  assign io_in[28:21] = INPUTS;  // project inputs and state machine configuration
-  assign io_in[37:29] = 9'b0;
-  assign OUTPUTS      = io_out[36:29];
-  assign READY        = io_out[37];
-  assign TX   = RX;
-  assign LED0 = 1'b1;
-  assign LED1 = 1'b0;
-  assign LED2 = 1'b0;
-  assign LED3 = 1'b0;
-  assign LED4 = RTS;
-
+  uart #(
+    .CLKRATE(12_000_000),
+    .BAUDRATE(115_200)
+  ) uart_inst (
+    .clk(CLK),
+    .rx(RX),
+    .tck(TCK),
+    .tdi(TDI),
+    .blink(blink),
+    .link(link)
+  );
+  
 endmodule

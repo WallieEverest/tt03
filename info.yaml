@@ -4,9 +4,10 @@ project:
   wokwi_id: 0
 
   source_files:  # source files must be in ./src
+    - clk_gen.v
+    - controller.v
+    - tap.v
     - morningjava_top.v
-    - morningjava_sqrt.v
-    - morningjava_seg7.v
   top_module:  "morningjava_top"
 
 # Keep a track of the submission yaml
@@ -32,24 +33,24 @@ documentation:
 
 # A description of what the inputs do
   inputs:               
-    - clock
-    - reset
-    - rxd
-    - rts
-    - demo
-    - none
-    - none
-    - none
+    - io_in[0] (CLOCK)
+    - io_in[1] (IN_1)
+    - io_in[2] (IN_2)
+    - io_in[3] (MODE)
+    - io_in[4] (BAUD_CLK)
+    - io_in[5] (TCK)
+    - io_in[6] (TMS)
+    - io_in[7] (TDI)
 # A description of what the outputs do
   outputs:
-    - txd
-    - cts
-    - pwm
-    - led
-    - none
-    - none
-    - none
-    - none
+    - io_out[0] (PWM)
+    - io_out[1] (OUT_1)
+    - io_out[2] (OUT_2)
+    - io_out[3] (OUT_3)
+    - io_out[4] (REF_CLK)
+    - io_out[5] (RTCK)
+    - io_out[6] (LED)
+    - io_out[7] (TDO)
 
 # The following fields are optional
   tag:          "sound generator"  # comma separated list of tags
