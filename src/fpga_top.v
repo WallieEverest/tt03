@@ -30,8 +30,8 @@ module fpga_top (
   localparam MPRJ_IO_PADS = 38;
   wire [MPRJ_IO_PADS-1:0] io_in;
   wire [MPRJ_IO_PADS-1:0] io_out;
-  wire blink;
-  wire link;
+  wire blink = 0;
+  wire link = 0;
 
   // Evaluation board features
   assign LED[0] = 1;      // D1, power
@@ -41,19 +41,19 @@ module fpga_top (
   assign LED[4] = blink;  // D5, 1 Hz blink
   
   // Connections via the Caravel wrapper
-  assign io_in[7:0]   = 0;        // Caravel reserved
-  assign io_in[8]     = MODE;     // mode selection [0: auto, 1: UART]
-  assign io_in[9]     = TMS;      // test mode select
-  assign io_in[10]    = 0;        // shared with outputs
-  assign io_in[11]    = TCK;      // test clock
-  assign io_in[19:12] = 8'd2;     // project index
-  assign io_in[20]    = RX;       // test input data
-  assign io_in[28:21] = I_DATA;   // input pins to projects
-  assign io_in[37:29] = 0;        // shared with outputs
-  assign RTCK   = io_out[10];     // test clock out
-  assign O_DATA = io_out[36:29];  // output pins from projects
-  assign TDO    = io_out[37];     // test data output
-  assign TX     = io_out[37];     // serial data to host
+  assign io_in[7:0]   = 0;              // Caravel reserved
+  assign io_in[8]     = MODE;           // mode selection [0: auto, 1: UART]
+  assign io_in[9]     = TMS;            // test mode select
+  assign io_in[10]    = 0;              // shared with outputs
+  assign io_in[11]    = TCK;            // test clock
+  assign io_in[19:12] = 8'd1;           // project index
+  assign io_in[20]    = RX;             // test input data
+  assign io_in[28:21] = I_DATA;         // input pins to projects
+  assign io_in[37:29] = 0;              // shared with outputs
+  assign RTCK         = io_out[10];     // test clock out
+  assign O_DATA       = io_out[36:29];  // output pins from projects
+  assign TDO          = io_out[37];     // test data output
+  assign TX           = io_out[37];     // serial data to host
 
   user_project_wrapper #(.MPRJ_IO_PADS(MPRJ_IO_PADS)) dut (
     .wb_clk_i   (CLK),
@@ -77,16 +77,16 @@ module fpga_top (
     .io_oeb     ()
   );
 
-  uart #(
-    .CLKRATE(12_000_000),
-    .BAUDRATE(115_200)
-  ) uart_inst (
-    .clk(CLK),
-    .rx(RX),
-    .tck(TCK),
-    .tdi(TDI),
-    .blink(blink),
-    .link(link)
-  );
+  // uart #(
+  //   .CLKRATE(12_000_000),
+  //   .BAUDRATE(115_200)
+  // ) uart_inst (
+  //   .clk(CLK),
+  //   .rx(RX),
+  //   .tck(TCK),
+  //   .tdi(TDI),
+  //   .blink(blink),
+  //   .link(link)
+  // );
   
 endmodule

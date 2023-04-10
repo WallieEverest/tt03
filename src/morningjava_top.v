@@ -15,7 +15,7 @@ module morningjava_top (
   input  wire [7:0] io_in,
   output wire [7:0] io_out
 );
-  localparam NUM_DESIGNS = 10;  // 250 for TT03 ASIC, 10 for test FPGA
+  localparam NUM_DESIGNS = 5;  // 250 for TT03 ASIC, 5 for test FPGA
   localparam NUM_IOS = 8;
 
   wire tms [0:NUM_DESIGNS];
@@ -31,12 +31,12 @@ module morningjava_top (
   genvar i;
 
   // Pin assignments
-  wire   select           = 8'd1;                       // project selection
   assign io_out[3:0]      = o_data[0][3:0];             // IO_OUT
   assign io_out[4]        = ref_clk;
   assign io_out[5]        = tck[NUM_DESIGNS];           // RTCK
   assign io_out[6]        = led;
   assign io_out[7]        = td[NUM_DESIGNS];            // TDO
+  wire   select           = 8'd1;                       // project selection
   wire   clk              = io_in[0];
   assign i_data[0] = {6'b0, io_in[2:1]};                // IO_IN
   wire   mode             = io_in[3];                   // MODE
@@ -48,8 +48,8 @@ module morningjava_top (
   // Bit-clock generator derived from asynchronous serial data input
   clk_gen clk_gen_inst (
     .clk(baud_clk),
-    .rx (io_in[20]),
-    .tck(io_in[11])
+    .rx (io_in[7]),
+    .tck(ref_clk)
   );
 
   // Internal scan chain controller

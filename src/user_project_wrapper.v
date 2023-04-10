@@ -41,7 +41,7 @@ module user_project_wrapper #(
   output wire [MPRJ_IO_PADS-1:0]  io_oeb
 );
 
-  localparam NUM_DESIGNS = 10;  // 250 for TT03 ASIC, 10 for test FPGA
+  localparam NUM_DESIGNS = 5;  // 250 for TT03 ASIC, 5 for test FPGA
   localparam NUM_IOS = 8;
 
   wire tms [0:NUM_DESIGNS];
@@ -52,6 +52,8 @@ module user_project_wrapper #(
   wire controller_tck;
   wire controller_tdi;
   wire controller_tms;
+  wire ref_clk;
+  wire led;
   genvar i;
 
   assign wbs_ack_o = 0;
@@ -60,30 +62,33 @@ module user_project_wrapper #(
   assign io_oeb    = 0;
   assign analog_io = 0;
   assign la_data_out[127:0] = 0;
+  
+  // Pin assignments
   assign io_out[9:0]     = 0;                           // shared with inputs and Caravel logic
-  assign io_out[10]      = tck[NUM_DESIGNS];            // RTCK
   assign io_out[28:11]   = 0;                           // shared with inputs
   assign io_out[36:29]   = o_data[0];                   // IO_OUT
+  assign io_out[10]      = ref_clk;                     // RTCK
   assign io_out[37]      = td[NUM_DESIGNS];             // TDO
-  wire   mode            = io_in[8];                    // MODE
-  assign tms[0] = (mode) ? io_in[9]  : controller_tms;  // TMS
-  assign tck[0] = (mode) ? io_in[11] : controller_tck;  // TCK
-  wire   select =          io_in[19:12];                // project selection
-  assign td[0]  = (mode) ? io_in[20] : controller_tdi;  // TDI
+  wire   select          = io_in[19:12];                // project selection
+  wire   clk             = wb_clk_i;
   assign i_data[0]       = io_in[28:21];                // IO_IN
-  wire   baud_clk        = wb_clk_i;  // DEBUG
+  wire   mode            = io_in[8];                    // MODE
+  wire   baud_clk        = io_in[9];                    // BAUD_CLK
+  assign tck[0] = (mode) ? io_in[11] : controller_tck;  // TCK
+  assign tms[0] = (mode) ? io_in[9]  : controller_tms;  // TMS
+  assign td[0]  = (mode) ? io_in[20] : controller_tdi;  // TDI
 
   // Bit-clock generator derived from asynchronous serial data input
   clk_gen clk_gen_inst (
     .clk  (baud_clk),
     .rx   (io_in[20]),
-    .tck  (io_in[11])
+    .tck  (ref_clk)
   );
 
   // Internal scan chain controller
   controller controller_inst (
-    .clk   (wb_clk_i),
-    .reset (wb_rst_i),
+    .clk   (clk),
+    .reset (1'b0),
     .rtck  (tck[NUM_DESIGNS]),
     .tdo   (td[NUM_DESIGNS]),
     .addr  (select),
