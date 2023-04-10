@@ -13,13 +13,13 @@
 module clk_gen (
   input  wire clk,  // 16x baud clock
   input  wire rx,
-  output reg  tck = 0
+  output reg  rtck = 0
 ) /* synthesis syn_hier="fixed" */;
 
   reg rx_meta = 0;
   reg tdi = 0;
   reg tdi_delay = 0;
-  reg [3:0] counter = 0 /* synthesis syn_preserve=1 */;
+  reg [3:0] count = 0 /* synthesis syn_preserve=1 */;
   localparam [3:0] HALF_BIT = 8;
 
   always @(posedge clk) begin
@@ -28,14 +28,14 @@ module clk_gen (
     tdi_delay <= tdi;      // generate delay to detect edge
 
     if (tdi != tdi_delay)  // edge detected
-      counter <= 0;        // synchronize bit clock
+      count <= 4;          // synchronize bit clock with phase offset
     else
-      counter <= counter+1;
+      count <= count+1;
 
-    if (counter < HALF_BIT)
-      tck <= 0;  // generate falling edge of TCK on RX change
+    if (count < HALF_BIT)
+      rtck <= 0;  // generate falling edge of TCK on RX change
     else
-      tck <= 1;  // generate rising edge of TCK midway through bit period
+      rtck <= 1;  // generate rising edge of TCK midway through bit period
   end
   
 endmodule

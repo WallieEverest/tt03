@@ -26,35 +26,34 @@ module morningjava_top (
   wire controller_tck;
   wire controller_tdi;
   wire controller_tms;
-  wire ref_clk;
-  wire led;
+  wire rtck;
   genvar i;
 
   // Pin assignments
   assign io_out[3:0]      = o_data[0][3:0];             // IO_OUT
-  assign io_out[4]        = ref_clk;
-  assign io_out[5]        = tck[NUM_DESIGNS];           // RTCK
-  assign io_out[6]        = led;
+  assign io_out[4]        = rtck;
+  assign io_out[5]        = tck[NUM_DESIGNS];
+  assign io_out[6]        = o_data[0][4];
   assign io_out[7]        = td[NUM_DESIGNS];            // TDO
   wire   select           = 8'd1;                       // project selection
   wire   clk              = io_in[0];
   assign i_data[0] = {6'b0, io_in[2:1]};                // IO_IN
   wire   mode             = io_in[3];                   // MODE
-  wire   baud_clk         = io_in[4];
+  wire   uart_clk         = io_in[4];
   assign tck[0] =  (mode) ? io_in[5] : controller_tck;  // TCK
   assign tms[0] =  (mode) ? io_in[6] : controller_tms;  // TMS
   assign td[0]  =  (mode) ? io_in[7] : controller_tdi;  // TDI
 
   // Bit-clock generator derived from asynchronous serial data input
   clk_gen clk_gen_inst (
-    .clk(baud_clk),
+    .clk(uart_clk),
     .rx (io_in[7]),
-    .tck(ref_clk)
+    .rtck(rtck)
   );
 
   // Internal scan chain controller
   controller controller_inst (
-    .clk   (clk),
+    .clk   (uart_clk),
     .reset (1'b0),
     .rtck  (tck[NUM_DESIGNS]),
     .tdo   (td[NUM_DESIGNS]),
@@ -86,6 +85,7 @@ module morningjava_top (
   for (i=1; i<=NUM_DESIGNS; i=i+1) begin
     assign o_data[i] = ~i_data[i];
   end
+  
   // *** Project list ***
   // User_01
 

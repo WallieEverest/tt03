@@ -11,7 +11,7 @@
 `default_nettype none
 `timescale 1ns/100ps
 
-module a_stp_001 ();
+module a_tb_fpga_top ();
   localparam WIDTH = 10;  // number of bits in message
   localparam DELAY = WIDTH+1;
   localparam [WIDTH-1:0] IDLE = ~0;
@@ -19,36 +19,36 @@ module a_stp_001 ();
   localparam STOP  = 1'b1;
   
   reg  [WIDTH-1:0] message = IDLE;  // default to IDLE pattern
-  reg  [7:0] i_data = 0;
+  wire [7:0] i_data;
   wire [7:0] o_data;
   reg  clk = 0;
   reg  trst = 0;
-  wire tck;
+  reg  tck = 0;
   wire tdi;
   wire tdo;
   reg  tms = 0;  // scan chain defaults to bypass
-  wire rtck;
   wire rx = message[0];
 
   assign i_data = 0;
 
   fpga_top fpga_inst (
     .CLK(clk),
-    .TRST(trst),
+    .DTRN(trst),
     .MODE(1'b1),
     .RX(rx),
-    .TMS(tms),
+    .RTSN(tms),
     .I_DATA(i_data),
     .O_DATA(o_data),
-    .TCK(tck),     
-    .TDI(tdi),      
+    .TCK(),
+    .TDI(tdi),
     .TDO(tdo),
-    .RTCK(rtck),
+    .TMS(),
     .TX(),
     .LED()
   );
     
-  initial forever #42 clk = ~clk;  // 12 MHz system clock
+  initial forever #42 clk = ~clk;    // 12 MHz system clock
+  initial forever #8681 tck = ~tck;  // 57,600 baud UART
 
   initial begin
     repeat (2) @(negedge tck);
@@ -74,7 +74,7 @@ module a_stp_001 ();
     repeat (2) @(negedge tck);
   end
 
-// add TRST and MODE tests
+// add MODE tests
 // extend I/O tests
 
 endmodule

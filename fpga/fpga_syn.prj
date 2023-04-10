@@ -5,15 +5,16 @@
 
 
 #project files
-add_file -verilog "../src/tap.v"
-add_file -verilog "../src/fpga_top.v"
-add_file -verilog "../src/controller.v"
-add_file -verilog "../src/clk_gen.v"
-add_file -verilog "../src/user_project_wrapper.v"
-add_file -verilog "../src/morningjava_top.v"
 
 
 
+add_file -verilog -lib work "../src/tap.v" 
+add_file -verilog -lib work "../src/fpga_top.v" 
+add_file -verilog -lib work "../src/controller.v" 
+add_file -verilog -lib work "../src/clk_gen.v" 
+add_file -verilog -lib work "../src/user_project_wrapper.v" 
+add_file -verilog -lib work "../src/morningjava_top.v" 
+add_file -verilog -lib work "../src/prescaler.v" 
 #implementation: "fpga_Implmnt"
 impl -add fpga_Implmnt -type fpga
 
@@ -31,7 +32,7 @@ set_option -job pr_1 -option enable_run 1
 set_option -technology SBTiCE40
 set_option -part iCE40HX1K
 set_option -package TQ144
-set_option -speed_grade ""
+set_option -speed_grade 
 set_option -part_companion ""
 
 #compilation/mapping options
@@ -76,4 +77,5 @@ set_option -write_apr_constraint 1
 
 #set result format/file last
 project -result_file "fpga_Implmnt/fpga.edf"
-impl -active "fpga_Implmnt"
+impl -active fpga_Implmnt
+project -run synthesis -clean

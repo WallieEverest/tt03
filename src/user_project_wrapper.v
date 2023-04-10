@@ -52,8 +52,8 @@ module user_project_wrapper #(
   wire controller_tck;
   wire controller_tdi;
   wire controller_tms;
-  wire ref_clk;
-  wire led;
+  wire rtck;
+
   genvar i;
 
   assign wbs_ack_o = 0;
@@ -67,27 +67,26 @@ module user_project_wrapper #(
   assign io_out[9:0]     = 0;                           // shared with inputs and Caravel logic
   assign io_out[28:11]   = 0;                           // shared with inputs
   assign io_out[36:29]   = o_data[0];                   // IO_OUT
-  assign io_out[10]      = ref_clk;                     // RTCK
+  assign io_out[10]      = rtck;                        // RTCK
   assign io_out[37]      = td[NUM_DESIGNS];             // TDO
   wire   select          = io_in[19:12];                // project selection
-  wire   clk             = wb_clk_i;
+  wire   uart_clk        = wb_clk_i;
   assign i_data[0]       = io_in[28:21];                // IO_IN
   wire   mode            = io_in[8];                    // MODE
-  wire   baud_clk        = io_in[9];                    // BAUD_CLK
   assign tck[0] = (mode) ? io_in[11] : controller_tck;  // TCK
   assign tms[0] = (mode) ? io_in[9]  : controller_tms;  // TMS
   assign td[0]  = (mode) ? io_in[20] : controller_tdi;  // TDI
 
   // Bit-clock generator derived from asynchronous serial data input
   clk_gen clk_gen_inst (
-    .clk  (baud_clk),
-    .rx   (io_in[20]),
-    .tck  (ref_clk)
+    .clk (uart_clk),
+    .rx  (io_in[20]),
+    .rtck(rtck)
   );
 
   // Internal scan chain controller
   controller controller_inst (
-    .clk   (clk),
+    .clk   (uart_clk),
     .reset (1'b0),
     .rtck  (tck[NUM_DESIGNS]),
     .tdo   (td[NUM_DESIGNS]),

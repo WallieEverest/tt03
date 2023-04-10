@@ -1,52 +1,40 @@
 # ##############################################################################
-
 # iCEcube PCF
-
 # Version:            2020.12.27943
-
 # File Generated:     Apr 2 2023 22:28:31
-
 # Family & Device:    iCE40HX1K
-
 # Package:            TQ144
-
 # ##############################################################################
 
-###MergeFF List 3
-set_io_ff CLK -in OFF
-set_io_ff LED[3] -out ON
-set_io_ff LED[4] -out ON
-
 ###IOSet List 31
-set_io I_DATA[1] 113 -io_std SB_LVCMOS -pullup yes
-set_io LED[0]     99 -io_std SB_LVCMOS
-set_io O_DATA[7]  44 -io_std SB_LVCMOS
 set_io CLK        21 -io_std SB_LVCMOS -pullup no
-set_io I_DATA[0] 112 -io_std SB_LVCMOS -pullup yes
-set_io LED[1]     98 -io_std SB_LVCMOS
-set_io O_DATA[6]  45 -io_std SB_LVCMOS
-set_io I_DATA[7] 119 -io_std SB_LVCMOS -pullup yes
-set_io MODE       91 -io_std SB_LVCMOS -pullup yes
-set_io O_DATA[1]  61 -io_std SB_LVCMOS
-set_io I_DATA[6] 118 -io_std SB_LVCMOS -pullup yes
-set_io O_DATA[0]  62 -io_std SB_LVCMOS
-set_io TDO        80 -io_std SB_LVCMOS
-set_io TMS         7 -io_std SB_LVCMOS -pullup no
-set_io I_DATA[5] 117 -io_std SB_LVCMOS -pullup yes
-set_io LED[4]     95 -io_std SB_LVCMOS
-set_io O_DATA[3]  56 -io_std SB_LVCMOS
-set_io RTCK       81 -io_std SB_LVCMOS
-set_io TCK        78 -io_std SB_LVCMOS
-set_io I_DATA[4] 116 -io_std SB_LVCMOS -pullup yes
-set_io O_DATA[2]  60 -io_std SB_LVCMOS
-set_io TDI        79 -io_std SB_LVCMOS
+set_io DTRN        3 -io_std SB_LVCMOS -pullup no
+set_io RTSN        7 -io_std SB_LVCMOS -pullup no
 set_io TX          8 -io_std SB_LVCMOS
-set_io I_DATA[3] 115 -io_std SB_LVCMOS -pullup yes
-set_io LED[2]     97 -io_std SB_LVCMOS
-set_io TRST        3 -io_std SB_LVCMOS -pullup no
-set_io O_DATA[5]  47 -io_std SB_LVCMOS
 set_io RX          9 -io_std SB_LVCMOS -pullup no
+set_io I_DATA[0] 112 -io_std SB_LVCMOS -pullup yes
+set_io I_DATA[1] 113 -io_std SB_LVCMOS -pullup yes
 set_io I_DATA[2] 114 -io_std SB_LVCMOS -pullup yes
-set_io LED[3]     96 -io_std SB_LVCMOS
+set_io I_DATA[3] 115 -io_std SB_LVCMOS -pullup yes
+set_io I_DATA[4] 116 -io_std SB_LVCMOS -pullup yes
+set_io I_DATA[5] 117 -io_std SB_LVCMOS -pullup yes
+set_io I_DATA[6] 118 -io_std SB_LVCMOS -pullup yes
+set_io I_DATA[7] 119 -io_std SB_LVCMOS -pullup yes
+set_io O_DATA[0]  62 -io_std SB_LVCMOS
+set_io O_DATA[1]  61 -io_std SB_LVCMOS
+set_io O_DATA[2]  60 -io_std SB_LVCMOS
+set_io O_DATA[3]  56 -io_std SB_LVCMOS
 set_io O_DATA[4]  48 -io_std SB_LVCMOS
-
+set_io O_DATA[5]  47 -io_std SB_LVCMOS
+set_io O_DATA[6]  45 -io_std SB_LVCMOS
+set_io O_DATA[7]  44 -io_std SB_LVCMOS
+set_io LED[0]     99 -io_std SB_LVCMOS
+set_io LED[1]     98 -io_std SB_LVCMOS
+set_io LED[2]     97 -io_std SB_LVCMOS
+set_io LED[3]     96 -io_std SB_LVCMOS
+set_io LED[4]     95 -io_std SB_LVCMOS
+set_io MODE       91 -io_std SB_LVCMOS -pullup yes
+set_io TMS        81 -io_std SB_LVCMOS
+set_io TDO        80 -io_std SB_LVCMOS
+set_io TDI        79 -io_std SB_LVCMOS
+set_io TCK        78 -io_std SB_LVCMOS

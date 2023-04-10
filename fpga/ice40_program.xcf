@@ -17,12 +17,13 @@
 				<BScanLen>1</BScanLen>
 				<BScanVal>0</BScanVal>
 			</Bypass>
-			<File>C:/Users/walli/git/scanchain_v2/fpga/fpga_Implmnt/pr_1/sbt/outputs/bitmap/fpga_top_bitmap.bin</File>
-			<FileTime>04/03/23 00:12:57</FileTime>
-			<JedecChecksum>0xBA5B</JedecChecksum>
+			<File>C:/Users/walli/git/tt03/fpga/fpga_Implmnt/pr_1/sbt/outputs/bitmap/fpga_top_bitmap.bin</File>
+			<FileTime>04/10/23 00:07:13</FileTime>
+			<JedecChecksum>0x7D3F</JedecChecksum>
 			<Operation>SPI Flash Erase,Program,Verify</Operation>
 			<Option>
 				<SVFVendor>JTAG STANDARD</SVFVendor>
+				<SVFProcessor>SVF Processor</SVFProcessor>
 				<AccessMode>SPI Flash Programming</AccessMode>
 			</Option>
 			<FPGALoader>
@@ -45,6 +46,7 @@
 					<Option>
 						<SVFVendor>JTAG STANDARD</SVFVendor>
 						<IOState>HighZ</IOState>
+						<SVFProcessor>SVF Processor</SVFProcessor>
 						<AccessMode>JTAG</AccessMode>
 					</Option>
 				</Device>
@@ -58,11 +60,11 @@
 					<IDCode>0x16</IDCode>
 					<Package>8-pin VDFPN8</Package>
 					<Operation>SPI Flash Erase,Program,Verify</Operation>
-					<File>C:/Users/walli/git/scanchain_v2/fpga/fpga_Implmnt/pr_1/sbt/outputs/bitmap/fpga_top_bitmap.bin</File>
+					<File>C:/Users/walli/git/tt03/fpga/fpga_Implmnt/pr_1/sbt/outputs/bitmap/fpga_top_bitmap.bin</File>
 					<AddressBase>0x00000000</AddressBase>
 					<EndAddress>0x00010000</EndAddress>
 					<DeviceSize>32</DeviceSize>
-					<DataSize>32299</DataSize>
+					<DataSize>32300</DataSize>
 					<NumberOfDevices>1</NumberOfDevices>
 					<ReInitialize value="FALSE"/>
 				</Device>
@@ -71,7 +73,7 @@
 				<Device>
 					<Pos>1</Pos>
 					<Name></Name>
-					<File>C:/Users/walli/git/scanchain_v2/fpga/fpga_Implmnt/pr_1/sbt/outputs/bitmap/fpga_top_bitmap.bin</File>
+					<File>./fpga_Implmnt/pr_1/sbt/outputs/bitmap/fpga_top_bitmap.bin</File>
 					<LocalChainList>
 						<LocalDevice index="-99"
 							name="Unknown"
@@ -79,6 +81,7 @@
 					</LocalChainList>
 					<Option>
 						<SVFVendor>JTAG STANDARD</SVFVendor>
+						<SVFProcessor>SVF Processor</SVFProcessor>
 					</Option>
 				</Device>
 			</FPGADevice>
@@ -91,12 +94,13 @@
 		<OperationOverride>No Override</OperationOverride>
 		<StartTAP>TLR</StartTAP>
 		<EndTAP>TLR</EndTAP>
+		<DisableCheckBoard value="TRUE"/>
 		<VerifyUsercode value="FALSE"/>
 		<TCKDelay>1</TCKDelay>
 	</ProjectOptions>
 	<CableOptions>
 		<CableName>USB2</CableName>
 		<PortAdd>FTUSB-0</PortAdd>
-		<USBID>Dual RS232-HS B Location 0000 Serial B</USBID>
+		<USBID>Dual RS232-HS A Location 0000 Serial A</USBID>
 	</CableOptions>
 </ispXCF>

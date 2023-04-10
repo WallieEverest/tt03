@@ -4,7 +4,7 @@ Version=Lattice Semiconductor Corporation iCEcube - Release: 2020.12.27943 - Bui
 ProjectName=fpga
 Vendor=SiliconBlue
 Synthesis=synplify
-ProjectVFiles=../src/tap.v,../src/fpga_top.v,../src/controller.v,../src/clk_gen.v,../src/user_project_wrapper.v,../src/morningjava_top.v
+ProjectVFiles=../src/tap.v=work,../src/fpga_top.v=work,../src/controller.v=work,../src/clk_gen.v=work,../src/user_project_wrapper.v=work,../src/morningjava_top.v=work,../src/prescaler.v=work
 ProjectCFiles=
 CurImplementation=fpga_Implmnt
 Implementations=fpga_Implmnt
