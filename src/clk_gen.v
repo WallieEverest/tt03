@@ -2,11 +2,14 @@
 // File:    clk_gen.v
 // Author:  Wallie Everest
 // Date:    26-MAR-2023
-// URL:     https://github.com/wallieeverest/scanchain_v2
+// URL:     https://github.com/wallieeverest/tt03
 // License: Apache 2.0
 //
 // Description: Recovers a bit clock (TCK) from asynchronous serial data.
 // Implementation: A reference clock must be supplied at 16x the baud rate
+// The TT03 scan clock is presumed to operate at 9,600 bytes per second,
+// yielding a project clock of 4,800 Hz.
+// This 16x UART clock produces a 300 baud serial interface.
 
 `default_nettype none
 

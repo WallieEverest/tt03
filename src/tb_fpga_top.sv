@@ -2,7 +2,7 @@
 // File:    stp_001.v
 // Author:  Wallace Everest
 // Date:    25-MAR-2023
-// URL:     https://github.com/wallieeverest/scanchain_v2
+// URL:     https://github.com/wallieeverest/tt03
 // License: Apache 2.0
 //
 // Description:

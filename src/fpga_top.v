@@ -2,7 +2,7 @@
 // File:    fpga_top.v
 // Author:  Wallie Everest
 // Date:    26-MAR-2023
-// URL:     https://github.com/wallieeverest/scanchain_v2
+// URL:     https://github.com/wallieeverest/tt03
 // License: Apache 2.0
 //
 // Description: Test of a Tiny Tapeout project on an FPGA evaluation board.
@@ -16,13 +16,13 @@ module fpga_top (
   input  wire       DTRN,    // PIO_3[4], pin 3  (RS232_DTRn)
   input  wire       MODE,    // PIO_1[9], pin 91 (pullup)
   input  wire       RX,      // PIO_3[8], pin 9  (RS232_RX)
-  input  wire       RTSN,     // PIO_3[6], pin 7  (RS232_RTSn)
+  input  wire       RTSN,    // PIO_3[6], pin 7  (RS232_RTSn)
   input  wire [7:0] I_DATA,  // PIO_0[9:2]       (pullup)
   output wire [7:0] O_DATA,  // PIO_2[10:17]
   output wire       TCK,     // PIO_1[2], pin 78
   output wire       TDI,     // PIO_1[3], pin 79
   output wire       TDO,     // PIO_1[4], pin 80
-  output wire       TMS,    // PIO_1[5], pin 81
+  output wire       TMS,     // PIO_1[5], pin 81
   output wire       TX,      // PIO_3[7], pin 8  (RS232_TX)
   output wire [4:0] LED      // PIO_1[10:14]
 );
@@ -84,7 +84,7 @@ module fpga_top (
 
   prescaler #(
     .CLKRATE(12_000_000),
-    .BAUDRATE(57_600)
+    .BAUDRATE(300)
   ) prescaler_inst (
     .clk     (CLK),
     .rx      (RX),

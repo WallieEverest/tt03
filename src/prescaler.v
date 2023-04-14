@@ -2,17 +2,20 @@
 // File:    prescaler.v
 // Author:  Wallie Everest
 // Date:    26-MAR-2023
-// URL:     https://github.com/wallieeverest/scanchain_v2
+// URL:     https://github.com/wallieeverest/tt03
 // License: Apache 2.0
 //
 // Description: Recovers a bit clock (TCK) from an asynchronous serial data RX
 // Implementation: Reports a link indicator for activity on RX
+// The TT03 scan clock is presumed to operate at 9,600 bytes per second,
+// yielding a project clock of 4,800 Hz.
+// This 16x UART clock produces a 300 baud serial interface.
 
 `default_nettype none
 
 module prescaler #(
   parameter CLKRATE = 12_000_000,  // system clock rate
-  parameter BAUDRATE = 57_600      // serial data rate: range 19,200 to 115,200
+  parameter BAUDRATE = 300         // serial data rate
 )(
   input  wire clk,
   input  wire rx,
@@ -21,11 +24,11 @@ module prescaler #(
   output reg  link = 0       // serial activity
 ) /* synthesis syn_hier="fixed" */;
 
-  localparam [5:0] DIVISOR = CLKRATE / BAUDRATE / 16;  // 57,600 baud => 13
+  localparam [11:0] DIVISOR = CLKRATE / BAUDRATE / 16;  // 300 baud => 2,500
   reg rx_meta   = 0;
   reg tdi       = 0;
   reg tdi_delay = 0;
-  reg [5:0] count_baud  = 0 /* synthesis syn_preserve=1 */;
+  reg [11:0] count_baud  = 0 /* synthesis syn_preserve=1 */;
   reg [11:0] count_4khz = 0;
   reg [10:0] count_2hz  = 0;
   reg [7:0] count_link  = 0;

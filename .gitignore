@@ -8,3 +8,4 @@ sim/work
 sim/*.do
 sim/*.mti
 sim/*.wlf
+src/nes

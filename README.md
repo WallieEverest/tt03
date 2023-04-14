@@ -1,34 +1,14 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg)
 
-# What is Tiny Tapeout?
+# The ChipTune Project
 
-TinyTapeout is an educational project that aims to make it easier and cheaper than ever to get your digital designs manufactured on a real chip!
+This is a two-in-one project. First, an audio device replicates the square-wave sound generators of vintage video games. Second, a re-imagined version of the scan controller is implemented to demonstrate faster data acquisition.
 
-Go to https://tinytapeout.com for instructions!
+## TinyTapeout 3 Configuration
 
-## How to change the Wokwi project
+For this third Multi Project Chip (MPC) tapeout, the original scan chain will be configures in 'external mode'. The inputs and ouputs for user projects will be derived externally from the scanchain data, not the I/O pins. The scanchain control signals will occupy the device pins designated io_in and io_out. Expected throughput is better than 10k byte/second. The ChipTune project will configure the shift clock to attain 9600 bytes/sec.
 
-Edit the [info.yaml](info.yaml) and change the wokwi_id to match your project.
-
-## How to enable the GitHub actions to build the ASIC files
-
-Please see the instructions for:
-
-* [Enabling GitHub Actions](https://tinytapeout.com/faq/#when-i-commit-my-change-the-gds-action-isnt-running)
-* [Enabling GitHub Pages](https://tinytapeout.com/faq/#my-github-action-is-failing-on-the-pages-part)
-
-## How does it work?
-
-When you edit the info.yaml to choose a different ID, the [GitHub Action](.github/workflows/gds.yaml) will fetch the digital netlist of your design from Wokwi.
-
-After that, the action uses the open source ASIC tool called [OpenLane](https://www.zerotoasiccourse.com/terminology/openlane/) to build the files needed to fabricate an ASIC.
-
-## Resources
-
-* [FAQ](https://tinytapeout.com/faq/)
-* [TinyTapeout-03](https://github.com/TinyTapeout/tinytapeout-03/)
-* [Join the community](https://discord.gg/rPK2nSjxy8)
-* [Caravel](https://caravel-harness.readthedocs.io/en/latest/)
+![top level drawing](image/tt03_top_level.svg)
 
 ## Pin Assignments
 | Signal      | Name                          | Dir | WCSP | QFN | PCB   |
@@ -71,3 +51,25 @@ After that, the action uses the open source ASIC tool called [OpenLane](https://
 | mprj_io[35] | IO_OUT[6]                     | Out | A8   | 14  | J1.3  |
 | mprj_io[36] | IO_OUT[7]                     | Out | B9   | 15  | J1.2  |
 | mprj_io[37] | READY                         | Out | A9   | 16  | J1.1  |
+
+## Caravel Connections
+
+![top level drawing](image/tt03_caravel.svg)
+
+## Project Configuration
+
+![top level drawing](image/tt03_project.svg)
+
+## Scanchain Version 2
+
+![top level drawing](image/tt03_scanchain_v2.svg)
+
+## ChipTune Operation
+
+![top level drawing](image/tt03_chiptune.svg)
+
+## Design For Test Considerations
+
+![top level drawing](image/tt03_test.svg)
+
+## Summary

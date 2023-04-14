@@ -1,8 +1,9 @@
-// Title:  Square root testbench
-// File:   tb_sqrt.sv
-// Author: Wallace Everest
-// Date:   23-NOV-2022
-// URL:    https://github.com/navray/tt02-square-root
+// Title:   Square root testbench
+// File:    tb_morningjava_top.sv
+// Author:  Wallace Everest
+// Date:    23-NOV-2022
+// URL:     https://github.com/wallieeverest/tt03
+// License: Apache 2.0
 
 `default_nettype none
 
