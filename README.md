@@ -76,13 +76,13 @@ Multiplexer
 - Pro: Pure combinatorial output. Potential to be fastest option.
 - Con: Requires large number of long routing resources. Not testable on FPGA platform.
 
-## Project Configuration
+## Tiny Project Configuration
 
-This project embeds another scanchain (version 2) to demonstrate its low latency and testability. The penalty for this implementation is 10 clock cycles per transfer. The delay is mitigated by a serial UART expanding the internal registers of the audio generator. Four extra scanchain endpoints are included for demonstration purposes.
+This tiny project embeds another scanchain (version 2) to demonstrate its low latency and testability. The penalty for this implementation is 10 clock cycles per transfer. The delay is mitigated by a serial UART expanding the internal registers of the audio generator. Four extra scanchain endpoints are included for demonstration purposes.
 
 ![Project](image/tt03_project.svg)
 
-A clock generator is used to recover the clock from asynchronous serial data. An external 16x baud clock is required by the design. The planned 4800 Hz project clock will permit a 300 baud serial link.
+The clock generator is used to recover a clock from asynchronous serial data. An external 16x baud clock is required by the design. The planned 4800 Hz project clock will permit a 300 baud serial link.
 
 ## Scanchain Version 2
 
@@ -102,7 +102,7 @@ The frequency range of the project is limited by the legacy scanchain, but mid-r
 
 ## Design For Test Considerations
 
-Version 2 of the scanchain has been tested on an FPGA platform with good results. A shift rate of 3.7 MHz enables communication with the computer at 115,200 baud. Longer scan chains do not affect throughput until the multiplexer delays become dominant.
+An isolated instance of scanchain version 2 has been tested on an FPGA platform with good results. A shift rate of 3.7 MHz permits communication with the computer at 115,200 baud. Longer scan chains do not affect throughput until multiplexer delays become dominant.
 
 ![Test configuration](image/tt03_test.svg)
 
