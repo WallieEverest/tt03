@@ -6,11 +6,11 @@ This is a two-in-one project. First, an audio device replicates the square-wave 
 
 ## TinyTapeout 3 Configuration
 
-For this third Multi Project Chip (MPC) tapeout, the original scan chain will be configures in 'external mode'. The inputs and ouputs for user projects will be derived externally from the scanchain data, not the I/O pins. The scanchain control signals will occupy the device pins designated io_in and io_out. Expected throughput is better than 10k byte/second. The ChipTune project will configure the shift clock to attain 9600 bytes/sec.
+For this third Multi Project Chip (MPC) tapeout, the original scan chain will be configures in 'external mode'. The inputs and outputs for user projects will be derived externally from the scanchain data, not the I/O pins. The scanchain control signals will occupy the device pins designated io_in and io_out. Expected throughput is better than 10k byte/second. The ChipTune project will configure the shift clock to attain 9600 bytes/sec.
 
 ![Top level drawing](image/tt03_top_level.svg)
 
-Devices from the eFabless Multi-Project Wafer (MPW) shuttle are delivered in two package options, each with 64 pins. TinyTapeout 2 will be packaged in a QFN, whereas TimeTapout 3 will be packaged as a WCSP. In both configurations, the device is mounted to a daughter board PCB with 10 castellated pins per side.
+Devices from the eFabless Multi-Project Wafer (MPW) shuttle are delivered in two package options, each with 64 pins. TinyTapeout 2 will be packaged in a QFN, whereas TinyTapout 3 will be packaged as a WCSP. In both delivered configurations, the device is mounted to a daughter board PCB with 10 castellated pins per side.
 
 The daughter board provides basic clock, configuration and power management for the Caravel SoC.
 
@@ -58,7 +58,7 @@ The daughter board provides basic clock, configuration and power management for 
 
 ## Caravel Connections
 
-Within the Caravel SoC, the TinyTapeout project hase configured the user space into 250 sub-projects. Each project is interconnected by a scanchain that serpentines through the chip. Control of the 4-wire chain provides access to each project.
+Within the Caravel SoC, the TinyTapeout project has configured the user space into 250 sub-projects. Each project is interconnected by a scanchain that serpentines through the chip. Control of the 4-wire chain provides access to each project.
 
 ![Caravel](image/tt03_caravel.svg)
 
@@ -66,7 +66,7 @@ The scanchain topology has pros and cons, as would any interconnect scheme. This
 
 Scanchain V1
 - Pro: Economical use of resources. Readily hardened in ASIC fabric. Testable on FPGA platform.
-- Con: Very long register chain (2,000) impacts overal acquisition rate.
+- Con: Very long register chain (2,000) impacts overall acquisition rate.
 
 Scanchain V2
 - Pro: Short register chain (10) minimizes latency. Economical use of resources. Testable on FPGA platform.
@@ -78,38 +78,38 @@ Multiplexer
 
 ## Project Configuration
 
-This project embeds another scanchain (version 2) to demonstrate its low latency and testability. The penalty for this implementation is 10 clock cycles per transfer. This is mitigated by the serial UART expanding the internal registers of the audio generator. Four extra scanchain endpoints are inluded for demonstration.
+This project embeds another scanchain (version 2) to demonstrate its low latency and testability. The penalty for this implementation is 10 clock cycles per transfer. The delay is mitigated by a serial UART expanding the internal registers of the audio generator. Four extra scanchain endpoints are included for demonstration purposes.
 
 ![Project](image/tt03_project.svg)
 
-A clock generator is used to recover the clock from asynchronous serial data. An external 16x baud clock is required by the design. The planned 4800 Hz clock will permit a 300 baud serial link.
+A clock generator is used to recover the clock from asynchronous serial data. An external 16x baud clock is required by the design. The planned 4800 Hz project clock will permit a 300 baud serial link.
 
 ## Scanchain Version 2
 
-The re-imagined scanchain uses a bypass technique commonly seen with JTAG devices. Each tap in the chain routes data through a combinatorial multiplxer until it is activated. Individual taps are assigned a unique 8-bit address during tapeout elaboration. A taps is activated when receiving a matching serial message, switching to its 8-bit shift registers.
+The re-imagined scanchain uses a bypass technique commonly seen with JTAG devices. Each tap in the chain routes data through a combinatorial multiplexer until it is activated. Individual taps are assigned a unique 8-bit address during tapeout elaboration. A tap is activated when receiving a matching address message, enabling its' 8-bit shift registers.
 
 ![Scanchain V2](image/tt03_scanchain_v2.svg)
 
-Encoding of serial data is compatible with the ubiquitous UART format. The waveform is one-start, eight-data, one-stop. Least significant bits are transmitted fist. An immediate advantage is the use of a computer COM port to generate and analyze functional data. The serial data is in addition to decoded parallel data available on the I/O ports.
+Encoding of serial data is compatible with the ubiquitous UART format. The waveform is one-start, eight-data, one-stop. Least significant bits are transmitted fist. An immediate advantage is the use of a computer COM port to generate and analyze functional data. The serial interface is in addition to decoded parallel data available on the I/O ports.
 
 ## ChipTune Operation
 
-The audio project consists of two rectangular pulse generators. Each moudle is controlled by four 8-bit registers. Configuratble parameters oar the frequency, duty cycle, sweep, decay, and note duration.
+The audio portion of the project consists of two rectangular pulse generators. Each module is controlled by four 8-bit registers. Configurable parameters are the frequency, duty cycle, sweep, decay, and note duration.
 
 ![Operation](image/tt03_chiptune.svg)
 
-The frequency range of the project is limited by the legacy scanchain, but mid-range frequencies are acceptable. Additional triangle and noise moulde will be added in future work when more bandwidth is available.
+The frequency range of the project is limited by the legacy scanchain, but mid-range frequencies are acceptable. Additional triangle and noise modules will be added in future work when more bandwidth is available.
 
 ## Design For Test Considerations
 
-Version 2 of the scanchain has been tested on an FPGA platform with good results. A shift clock of 1.8 MHz enables communication with the computer at 115,200 baud.
+Version 2 of the scanchain has been tested on an FPGA platform with good results. A shift rate of 3.7 MHz enables communication with the computer at 115,200 baud. Longer scan chains do not affect throughput until the multiplexer delays become dominant.
 
 ![Test configuration](image/tt03_test.svg)
 
-Output of the sub-project is always available at both the parallel output port and the serial data. A mode signal driven by the DTS line controls whether the project's input is derived from the parallel input port or serial data.
+Output of the sub-project is always available at both the parallel output port and the serial data. A 'Mode' signal driven by the DTS line controls whether the project's input is derived from the parallel input port or serial data.
 
 ## Summary
 
-The next shuttle for TinyTapeout is planning a multiplexer for selecting between the 250 projects.
+The next shuttle for TinyTapeout is planning a multiplexer for selecting between the 250 projects. This will alleviate latency in the present design.
 
 The revised scanchain offered here is an alternative for other group projects. The scanchain topology still holds merit in many applications.
