@@ -6,7 +6,7 @@ This is a two-in-one project. First, an audio device replicates the square-wave 
 
 ## TinyTapeout 3 Configuration
 
-For this third Multi Project Chip (MPC) tapeout, the original scan chain will be configured in 'external mode'. The inputs and outputs for user projects will be derived externally from the scanchain data, not from the chip's I/O pins. The scanchain control signals will occupy the pins designated io_in and io_out. Expected throughput is better than 10k byte/second. The ChipTune project will configure the shift clock to attain 9600 bytes/sec. This speed provides a 4800 Hz clock and 300 baud communication to the tiny user project.
+For this third Multi Project Chip (MPC) tapeout, the original scan chain will be configured in 'external mode'. The inputs and outputs for user projects will be derived externally from scanchain data, not from the chip's I/O pins. The scanchain control signals will occupy pins designated io_in and io_out. Expected throughput is better than 10k byte/second. The ChipTune project will configure the shift clock to attain 9600 bytes/sec. This speed provides a 4800 Hz clock and 300 baud communication to the tiny user project.
 
 ![Top level drawing](image/tt03_top_level.svg)
 
@@ -14,7 +14,7 @@ Devices from the eFabless Multi-Project Wafer (MPW) shuttle are delivered in two
 
 The daughter board provides basic clock, configuration and power management for the Caravel SoC.
 
-### Pin Assignments
+### MPRJ_IO Pin Assignments
 | Signal      | Name                          | Dir | WCSP | QFN | PCB   |
 | ----------- | ----------------------------- |---- |----- |---- |------ |
 | mprj_io[0]  | JTAG                          | In  | D7   | 31  | J3.14 |
@@ -65,32 +65,32 @@ Within the Caravel SoC, the TinyTapeout project has configured the user space in
 The scanchain topology has pros and cons, as would any interconnect scheme. This project presents an alternative topology based on a JTAG implementation. The advantage is a reduction in the length of the register latency.
 
 Scanchain V1
-- Pro: Economical use of resources. Readily hardened in ASIC fabric. Testable on FPGA platform.
+- Pro: Economical use of resources. Readily hardened in ASIC fabric. Testable on an FPGA platform.
 - Con: Very long register chain (2,000) impacts overall acquisition rate.
 
 Scanchain V2
-- Pro: Short register chain (10) minimizes latency. Economical use of resources. Testable on FPGA platform.
+- Pro: Short register chain (10) minimizes latency. Economical use of resources. Testable on an FPGA platform.
 - Con: Speed limited by length of multiplexer propagation (250 instances).
 
 Multiplexer
-- Pro: Pure combinatorial output. Potential to be fastest option.
-- Con: Requires large number of long routing resources. Not testable on FPGA platform.
+- Pro: Pure combinatorial output. Potential to be the fastest option.
+- Con: Requires a large number of long routing resources. Internal tri-state busses not testable on an FPGA platform.
 
 ## Tiny Project Configuration
 
-This tiny project embeds another scanchain (version 2) to demonstrate its low latency and testability. The penalty for this implementation is 10 clock cycles per transfer. The delay is mitigated by a serial UART expanding the internal registers of the audio generator. Four extra scanchain endpoints are included for demonstration purposes.
+This tiny project embeds the revised scanchain (version 2) to investigate its low latency and testability. The penalty for this implementation is 10 clock cycles per transfer. The delay is mitigated by a serial UART expanding the internal registers of the audio generator. Four extra scanchain endpoints are included for demonstration purposes.
 
 ![Project](image/tt03_project.svg)
 
-The clock generator is used to recover a clock from asynchronous serial data. An external 16x baud clock is required by the design. The planned 4800 Hz project clock will permit a 300 baud serial link.
+A clock generator is used to recover a bit-clock from asynchronous serial data. An external 16x baud clock is required by the design. This planned 4800 Hz project clock will permit a 300 baud serial link.
 
 ## Scanchain Version 2
 
-The re-imagined scanchain uses a bypass technique commonly seen with JTAG devices. Each tap in the chain routes data through a combinatorial multiplexer until it is activated. Individual taps are assigned a unique 8-bit address during tapeout elaboration. A tap is activated when receiving a matching address message, enabling its' 8-bit shift registers.
+The re-imagined scanchain uses a bypass technique commonly seen with JTAG devices. Each 'tap' in the chain routes data through a combinatorial multiplexer until the module is activated. Individual taps are assigned a unique 8-bit address during tapeout elaboration. A tap is activated when it receives a matching address message, enabling its' 8-bit shift register. Unselected taps drive logic 0 into the projects' inputs to keep them in a quiescent state.
 
 ![Scanchain V2](image/tt03_scanchain_v2.svg)
 
-Encoding of serial data is compatible with the ubiquitous UART format. The waveform is one-start, eight-data, one-stop. Least significant bits are transmitted fist. An immediate advantage is the use of a computer COM port to generate and analyze functional data. The serial interface is in addition to decoded parallel data available on the I/O ports.
+Encoding of serial data is compatible with the ubiquitous UART format. The waveform is one-start, eight-data, one-stop (300,8,n,1). Least significant bits are transmitted fist. An immediate advantage is the use of a computer COM port to generate and analyze functional data. The serial interface is in addition to decoded parallel data available on the I/O ports.
 
 ## ChipTune Operation
 
@@ -102,7 +102,7 @@ The frequency range of the project is limited by the legacy scanchain, but mid-r
 
 ## Design For Test Considerations
 
-An isolated instance of scanchain version 2 has been tested on an FPGA platform with good results. A shift rate of 3.7 MHz permits communication with the computer at 115,200 baud. Longer scan chains do not affect throughput until multiplexer delays become dominant.
+An isolated instance of scanchain version 2 has been tested on an FPGA platform with good results. A shift rate of 3.7 MHz permits communication with the computer at 115,200 baud. Longer scan chains do not affect throughput until multiplexer delays become dominant. For an FPGA, 75% of the timing delays are attributed to routing resources.
 
 ![Test configuration](image/tt03_test.svg)
 
@@ -112,4 +112,4 @@ Output of the sub-project is always available at both the parallel output port a
 
 The next shuttle for TinyTapeout is planning a multiplexer for selecting between the 250 projects. This will alleviate latency in the present design.
 
-The revised scanchain offered here is an alternative for other group projects. The scanchain topology still holds merit in many applications.
+The revised scanchain offered here is an alternative for other group projects. The scanchain topology still holds merit in many applications. The application of a computer-based logic analyzer via a USB COM port is appealing.
