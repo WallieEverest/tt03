@@ -6,7 +6,7 @@ This is a two-in-one project. First, an audio device replicates the square-wave 
 
 ## TinyTapeout 3 Configuration
 
-For this third Multi Project Chip (MPC) tapeout, the original scan chain will be configures in 'external mode'. The inputs and outputs for user projects will be derived externally from the scanchain data, not the I/O pins. The scanchain control signals will occupy the device pins designated io_in and io_out. Expected throughput is better than 10k byte/second. The ChipTune project will configure the shift clock to attain 9600 bytes/sec.
+For this third Multi Project Chip (MPC) tapeout, the original scan chain will be configured in 'external mode'. The inputs and outputs for user projects will be derived externally from the scanchain data, not from the chip's I/O pins. The scanchain control signals will occupy the pins designated io_in and io_out. Expected throughput is better than 10k byte/second. The ChipTune project will configure the shift clock to attain 9600 bytes/sec. This speed provides a 4800 Hz clock and 300 baud communication to the tiny user project.
 
 ![Top level drawing](image/tt03_top_level.svg)
 
