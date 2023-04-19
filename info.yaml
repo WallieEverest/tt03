@@ -27,7 +27,7 @@ documentation:
   description:  "Vintage 8-bit sound generator"
 
 # Longer description of how the project works. You can use standard markdown format.
-  how_it_works:
+  how_it_works: |
     Chiptune implements an 8-bit Programmable Sound Generator.
     Input is from a serial UART interface.
     Output is PWM audio.
@@ -97,7 +97,7 @@ documentation:
       The application of a computer-based logic analyzer via a USB COM port is appealing.
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
-  how_to_test:
+  how_to_test: |
     The project is connected to a COM port at 300 baud.
     Serial data is decoded by the device as an address when TMS = 1, and as data when TMS = 0.
     The device response with serial data to the COM port.
