@@ -1,7 +1,7 @@
 #--  Synopsys, Inc.
 #--  Version L-2016.09L+ice40
 #--  Project file C:\Users\walli\git\tt03\fpga\fpga_syn.prj
-#--  Written on Sun Apr 09 21:15:58 2023
+#--  Written on Wed Apr 19 00:29:29 2023
 
 
 #project files
@@ -16,6 +16,10 @@ add_file -verilog -lib work "../src/user_project_wrapper.v"
 add_file -verilog -lib work "../src/morningjava_top.v" 
 add_file -verilog -lib work "../src/prescaler.v" 
 add_file -verilog -lib work "../src/tiny_projects.v" 
+add_file -verilog -lib work "../src/chiptune.v" 
+add_file -verilog -lib work "../src/pulse.v" 
+add_file -verilog -lib work "../src/frame_counter.v" 
+add_file -verilog -lib work "../src/decoder.v" 
 #implementation: "fpga_Implmnt"
 impl -add fpga_Implmnt -type fpga
 
@@ -43,7 +47,7 @@ set_option -top_module "fpga_top"
 set_option -distributed_compile 0
 
 # mapper_without_write_options
-set_option -frequency auto
+set_option -frequency 1.000000
 set_option -srs_instrumentation 1
 
 # mapper_options

@@ -19,8 +19,8 @@ module morningjava_top (
   localparam NUM_DESIGNS = 5;  // 250 for TT03 ASIC, 5 for test FPGA
   localparam NUM_IOS = 8;
 
-  wire tms [0:NUM_DESIGNS];
   wire tck [0:NUM_DESIGNS];
+  wire tms [0:NUM_DESIGNS];
   wire td  [0:NUM_DESIGNS];
   wire [NUM_IOS-1:0] i_data [0:NUM_DESIGNS];
   wire [NUM_IOS-1:0] o_data [0:NUM_DESIGNS];
@@ -88,7 +88,7 @@ module morningjava_top (
   
   // *** Project list ***
   // User_01
-  invert nes_top(
+  chiptune chiptune_top(
     .io_in (i_data[1]),
     .io_out(o_data[1])
   );
