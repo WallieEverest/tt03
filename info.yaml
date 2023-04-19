@@ -32,12 +32,12 @@ documentation:
     Input is from a serial UART interface.
     Output is 4-bit DAC audio.
 
-    # The ChipTune Project:
+    The ChipTune Project:
       This is a two-in-one project.
       First, an audio device replicates the square-wave sound generators of vintage video games.
       Second, a re-imagined version of the scan controller is implemented to demonstrate faster data acquisition.
 
-    ## TinyTapeout 3 Configuration:
+    TinyTapeout 3 Configuration:
       For this third Multi Project Chip (MPC) tapeout, the original scan chain will be configured in 'external mode'.
       The inputs and outputs for user projects will be derived externally from scanchain data, not from the chip's I/O pins. The scanchain control signals will occupy pins designated io_in and io_out. Expected throughput is better than 10k byte/second. The ChipTune project will configure the shift clock to attain 9600 bytes/sec. This speed provides a 4800 Hz clock and 300 baud communication to the tiny user project.
       Devices from the eFabless Multi-Project Wafer (MPW) shuttle are delivered in two package options, each with 64 pins.
@@ -103,7 +103,7 @@ documentation:
     An external bit clock must be provided on io_in[5] with a rising edge in the center of the bit period.
     This clock may be source from the reference clock on io_out[4].
     Serial data is received on io_in[7].
-    Serial data is decoded by the device as an address when io_in[6] = 1, and as data when io_in[6] = 0.
+    Serial data is decoded by the device as an address when io_in[6] = 0, and as data when io_in[6] = 1.
     The device responds with serial data on io_out[7].
     A 4-bit DAC output is available on io_out[3:0].
 
