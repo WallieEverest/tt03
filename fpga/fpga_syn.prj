@@ -15,6 +15,7 @@ add_file -verilog -lib work "../src/clk_gen.v"
 add_file -verilog -lib work "../src/user_project_wrapper.v" 
 add_file -verilog -lib work "../src/morningjava_top.v" 
 add_file -verilog -lib work "../src/prescaler.v" 
+add_file -verilog -lib work "../src/tiny_projects.v" 
 #implementation: "fpga_Implmnt"
 impl -add fpga_Implmnt -type fpga
 

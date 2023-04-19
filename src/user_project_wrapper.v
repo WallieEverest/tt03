@@ -79,12 +79,12 @@ module user_project_wrapper #(
 
   // Bit-clock generator derived from asynchronous serial data input
   clk_gen clk_gen_inst (
-    .clk (uart_clk),
-    .rx  (io_in[20]),
-    .rtck(rtck)
+    .clk (uart_clk),   // 16x baud rate
+    .rx  (io_in[20]),  // serial input
+    .rtck(rtck)        // bit clock
   );
 
-  // Internal scan chain controller
+  // Internal scan chain controller (not implemented)
   controller controller_inst (
     .clk   (uart_clk),
     .reset (1'b0),
@@ -115,14 +115,38 @@ module user_project_wrapper #(
   end
 
   // Default data loopback for unused project locations
-  for (i=2; i<=NUM_DESIGNS; i=i+1)
-    assign o_data[i] = ~i_data[i];
+  // for (i=2; i<=NUM_DESIGNS; i=i+1)
+    // assign o_data[i] = ~i_data[i];
 
   // *** Project list ***
   // User_01
   morningjava_top morningjava_top_inst(
     .io_in (i_data[1]),
     .io_out(o_data[1])
+  );
+
+  // User_02
+  invert invert_inst(
+    .io_in (i_data[2]),
+    .io_out(o_data[2])
+  );
+
+  // User_03
+  parity parity_inst(
+    .io_in (i_data[3]),
+    .io_out(o_data[3])
+  );
+
+  // User_04
+  roll roll_inst(
+    .io_in (i_data[4]),
+    .io_out(o_data[4])
+  );
+
+  // User_05
+  ecc ecc_inst(
+    .io_in (i_data[5]),
+    .io_out(o_data[5])
   );
 
 endmodule

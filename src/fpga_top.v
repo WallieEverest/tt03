@@ -40,14 +40,14 @@ module fpga_top (
   assign LED[1] = TMS;    // D2, test enable from COM
   assign LED[2] = link;   // D3, RX activity status
   assign LED[3] = DTRN;   // D4, DTRn from COM
-  assign LED[4] = blink;  // D5, 1 Hz blink (center green)
+  assign LED[4] = blink;  // D5, 1 Hz blink (center green LED)
   
   // Connections via the Caravel wrapper
   assign io_in[7:0]   = 0;              // Caravel reserved
   assign io_in[8]     = MODE;           // mode selection [0: auto, 1: UART]
   assign io_in[9]     = TMS;            // test mode select
   assign io_in[10]    = 0;              // shared with outputs
-  assign io_in[11]    = rtck;           // test clock
+  assign io_in[11]    = TCK;            // bit clock
   assign io_in[19:12] = 8'd1;           // project index
   assign io_in[20]    = TDI;            // test input data
   assign io_in[28:21] = I_DATA;         // input pins to projects
@@ -60,7 +60,7 @@ module fpga_top (
   assign TCK          = rtck;
   assign TMS          = RTSN;
 
-  user_project_wrapper #(.MPRJ_IO_PADS(MPRJ_IO_PADS)) dut (
+  user_project_wrapper #(.MPRJ_IO_PADS(MPRJ_IO_PADS)) user_project_inst (
     .wb_clk_i   (uart_clk),
     .wb_rst_i   (1'b0),
     .wbs_adr_i  (32'b0),
@@ -83,14 +83,14 @@ module fpga_top (
   );
 
   prescaler #(
-    .CLKRATE(12_000_000),
-    .BAUDRATE(300)
+    .CLKRATE(12_000_000),  // oscillator frequency
+    .BAUDRATE(300)         // baud rate
   ) prescaler_inst (
-    .clk     (CLK),
-    .rx      (RX),
-    .uart_clk(uart_clk),
-    .blink   (blink),
-    .link    (link)
+    .clk     (CLK),        // sysem clock
+    .rx      (RX),         // serial input for activity indicator
+    .uart_clk(uart_clk),   // 16x UART clock, 4800 Hz
+    .blink   (blink),      // 1 Hz blink indicator
+    .link    (link)        // activity indicator
   );
   
 endmodule

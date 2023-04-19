@@ -83,11 +83,37 @@ module morningjava_top (
   end
 
   // Default data loopback for unused project locations
-  for (i=1; i<=NUM_DESIGNS; i=i+1) begin
-    assign o_data[i] = ~i_data[i];
-  end
+  // for (i=1; i<=NUM_DESIGNS; i=i+1)
+  //   assign o_data[i] = ~i_data[i];
   
   // *** Project list ***
   // User_01
+  invert nes_top(
+    .io_in (i_data[1]),
+    .io_out(o_data[1])
+  );
 
+  // User_02
+  invert invert_inst(
+    .io_in (i_data[2]),
+    .io_out(o_data[2])
+  );
+
+  // User_03
+  parity parity_inst(
+    .io_in (i_data[3]),
+    .io_out(o_data[3])
+  );
+
+  // User_04
+  roll roll_inst(
+    .io_in (i_data[4]),
+    .io_out(o_data[4])
+  );
+
+  // User_05
+  ecc ecc_inst(
+    .io_in (i_data[5]),
+    .io_out(o_data[5])
+  );
 endmodule

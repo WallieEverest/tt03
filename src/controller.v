@@ -17,10 +17,10 @@ module controller (
   input  wire tdo,
   input  wire addr,
   input  wire [7:0] i_pins,
-  output reg [7:0] o_pins,
-  output reg tck,
-  output reg tms,
-  output reg tdi
+  output reg [7:0] o_pins = 0,
+  output reg tck = 0,
+  output reg tms = 0,
+  output reg tdi = 0
 ) /* synthesis syn_hier="fixed" */;
 
 always @(posedge clk) begin
