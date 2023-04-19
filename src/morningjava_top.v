@@ -31,10 +31,10 @@ module morningjava_top (
   genvar i;
 
   // Pin assignments
-  assign io_out[3:0]      = o_data[0][3:0];             // IO_OUT
+  assign io_out[3:0]      = o_data[1][3:0];             // CH1 DAC
   assign io_out[4]        = rtck;
   assign io_out[5]        = tck[NUM_DESIGNS];
-  assign io_out[6]        = o_data[0][4];
+  assign io_out[6]        = o_data[1][4];               // CH2 DAC (partial)
   assign io_out[7]        = td[NUM_DESIGNS];            // TDO
   wire   select           = 8'd1;                       // project selection
   wire   clk              = io_in[0];
@@ -52,7 +52,7 @@ module morningjava_top (
     .rtck(rtck)
   );
 
-  // Internal scan chain controller
+  // Internal scan chain controller (not implemented)
   controller controller_inst (
     .clk   (uart_clk),
     .reset (1'b0),
