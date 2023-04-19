@@ -40,9 +40,6 @@ documentation:
     TinyTapeout 3 Configuration:
       For this third Multi Project Chip (MPC) tapeout, the original scan chain will be configured in 'external mode'.
       The inputs and outputs for user projects will be derived externally from scanchain data, not from the chip's I/O pins. The scanchain control signals will occupy pins designated io_in and io_out. Expected throughput is better than 10k byte/second. The ChipTune project will configure the shift clock to attain 9600 bytes/sec. This speed provides a 4800 Hz clock and 300 baud communication to the tiny user project.
-
-      ![Top level drawing](./image/tt03_top_level.svg)
-
       Devices from the eFabless Multi-Project Wafer (MPW) shuttle are delivered in two package options, each with 64 pins.
       TinyTapeout 2 will be packaged in a QFN, whereas TinyTapout 3 will be packaged as a WCSP. In both delivered configurations, the device is mounted to a daughter board PCB with 10 castellated pins per side.
       The daughter board provides basic clock, configuration and power management for the Caravel SoC.
