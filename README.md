@@ -8,7 +8,7 @@ This is a two-in-one project. First, an audio device replicates the square-wave 
 
 For this third Multi Project Chip (MPC) tapeout, the original scan chain will be configured in 'external mode'. The inputs and outputs for user projects will be derived externally from scanchain data, not from the chip's I/O pins. The scanchain control signals will occupy pins designated io_in and io_out. Expected throughput is better than 10k byte/second. The ChipTune project will configure the shift clock to attain 9600 bytes/sec. This speed provides a 4800 Hz clock and 300 baud communication to the tiny user project.
 
-![Top level drawing](image/tt03_top_level.svg)
+![Top Level Drawing](image/tt03_top_level.svg)
 
 Devices from the eFabless Multi-Project Wafer (MPW) shuttle are delivered in two package options, each with 64 pins. TinyTapeout 2 will be packaged in a QFN, whereas TinyTapout 3 will be packaged as a WCSP. In both delivered configurations, the device is mounted to a daughter board PCB with 10 castellated pins per side.
 
@@ -104,7 +104,7 @@ The frequency range of the project is limited by the legacy scanchain, but mid-r
 
 An isolated instance of scanchain version 2 has been tested on an FPGA platform with good results. A shift rate of 3.7 MHz permits communication with the computer at 115,200 baud. Longer scan chains do not affect throughput until multiplexer delays become dominant. For an FPGA, 75% of the timing delays are attributed to routing resources.
 
-![Test configuration](image/tt03_test.svg)
+![Test Configuration](image/tt03_test.svg)
 
 Output of the sub-project is always available at both the parallel output port and the serial data. A 'Mode' signal driven by the DTS line controls whether the project's input is derived from the parallel input port or serial data.
 
