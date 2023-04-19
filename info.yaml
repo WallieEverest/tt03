@@ -149,4 +149,4 @@ documentation:
   discord:      "morningjava#9314"
   doc_link:     "https://github.com/WallieEverest/tt03/blob/main/README.md"
   clock_hz:     22000                        # Clock frequency in Hz (if required)
-  picture:      "./image/tt03_chiptune.svg"  # relative path to a picture in your repository
+  picture:      "./image/tt03_chiptune.png"  # relative path to a picture in your repository
