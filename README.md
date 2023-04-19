@@ -90,7 +90,7 @@ The re-imagined scanchain uses a bypass technique commonly seen with JTAG device
 
 ![Scanchain V2](image/tt03_scanchain_v2.svg)
 
-Encoding of serial data is compatible with the ubiquitous UART format. The waveform is one-start, eight-data, one-stop (300,8,n,1). Least significant bits are transmitted fist. An immediate advantage is the use of a computer COM port to generate and analyze functional data. The serial interface is in addition to decoded parallel data available on the I/O ports.
+Encoding of serial data is compatible with the ubiquitous UART format. The waveform is one-start, eight-data, one-stop (300,8,n,1). Least significant bits are transmitted first. An immediate advantage is the use of a computer COM port to generate and analyze functional data. The serial interface is in addition to decoded parallel data available on the I/O ports.
 
 ## ChipTune Operation
 
@@ -112,4 +112,4 @@ Output of the sub-project is always available at both the parallel output port a
 
 The next shuttle for TinyTapeout is planning a multiplexer for selecting between the 250 projects. This will alleviate latency in the present design.
 
-The revised scanchain offered here is an alternative for other group projects. The scanchain topology still holds merit in many applications. The application of a computer-based logic analyzer via a USB COM port is appealing.
+The revised scanchain offered here is an alternative for other group projects. The scanchain topology still holds merit in many applications, especially for the application of a computer-based logic analyzer via a USB COM port.
