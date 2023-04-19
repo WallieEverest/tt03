@@ -13,18 +13,6 @@ module decoder (
   output reg  [7:0] apu_reg_7
 );
 
-  always @ ( posedge sck ) begin
-    apu_reg_0 = 0;
-    apu_reg_1 = 0;
-    apu_reg_2 = 0;
-    apu_reg_3 = 0;
-    apu_reg_4 = 0;
-    apu_reg_5 = 0;
-    apu_reg_6 = 0;
-    apu_reg_7 = 0;
-  end
-
-
   localparam WIDTH = 10;  // number of bits in message
   localparam [WIDTH-1:0] IDLE = ~0;
   localparam START = 1'b0;
