@@ -83,24 +83,21 @@ module pulse (
   reg        length_counter_reset = 0;
   reg [ 7:0] length_counter = 0;
   // reg [31:0] lc_list = 0;
-  reg [15:0] lc_list = 0;
-  // reg [4:0] lc_list = 0;
+  reg [4:0] lc_list = 0;
   
   always @( posedge hlf_clk ) begin
     if ( length_counter_reset ) begin
       length_counter_reset <= 0;
       length_counter       <= length_preload;
       // lc_list              <= {reg_3, reg_2, reg_1, reg_0};
-      lc_list              <= {reg_3, reg_0};
-      // lc_list              <= length_select;
+      lc_list              <= length_select;
     end
     else begin
       if ( !counter_enable && (length_counter != 0) )
         length_counter <= length_counter - 1;
 
       // if ( lc_list != {reg_3, reg_2, reg_1, reg_0} ) 
-      if ( lc_list != {reg_3, reg_0} ) 
-      // if ( lc_list != length_select ) 
+      if ( lc_list != length_select ) 
         length_counter_reset <= 1;
     end
   end
