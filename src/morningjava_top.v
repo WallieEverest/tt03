@@ -97,13 +97,13 @@ module morningjava_top (
   
   // *** Project list ***
   // User_01
-  invert invert_inst(
+  invert invert_inst1(
     .io_in (i_data[1]),
     .io_out(o_data[1])
   );
 
   // User_02
-  ecc ecc_inst(
+  invert invert_inst2(
     .io_in (i_data[2]),
     .io_out(o_data[2])
   );
