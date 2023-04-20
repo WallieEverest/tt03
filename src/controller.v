@@ -17,11 +17,17 @@ module controller (
   input  wire tdo,
   input  wire addr,
   input  wire [7:0] i_pins,
-  output reg [7:0] o_pins = 0,
-  output reg tck = 0,
-  output reg tms = 0,
-  output reg tdi = 0
+  output wire [7:0] o_pins,
+  output wire tck,
+  output wire tms,
+  output wire tdi
 ) /* synthesis syn_hier="fixed" */;
+
+  // DEBUG faked signal assignments
+  assign o_pins = i_pins;
+  assign tck = rtck;
+  assign tms = addr & reset & clk;
+  assign tdi = tdo;
 
 // always @(posedge clk) begin
 //   if (reset) begin

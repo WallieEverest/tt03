@@ -3,22 +3,22 @@
 // Generate low-frequency clocks
 module frame_counter (
   input  wire clk,
-  output reg  fc_qfr_clk = 0,  // approx. 240 Hz
-  output reg  fc_hfr_clk = 0   // approx. 120 Hz
+  output reg  qtr_clk = 0,  // approx. 240 Hz
+  output reg  hlf_clk = 0   // approx. 120 Hz
 );
 
 localparam PRESCALE = 4800/240/2;  // frame rate
-reg [10:0] seq = 0;
+reg [3:0] counter = 0;
 
 // Step through Mode 0 4-step sequence
 always @ ( posedge clk ) begin
-  if ( seq == PRESCALE-1 ) begin
-    seq <= 0;
-    fc_qfr_clk <= ~fc_qfr_clk;
-    if (fc_qfr_clk == 0)
-      fc_hfr_clk <= ~fc_hfr_clk;
+  if ( counter == PRESCALE-1 ) begin
+    counter <= 0;
+    qtr_clk <= ~qtr_clk;
+    if (qtr_clk == 0)
+      hlf_clk <= ~hlf_clk;
   end else
-    seq <= seq + 1;
+    counter <= counter + 1;
 end
 
 endmodule

@@ -19,8 +19,8 @@ module chiptune (
 );
 
   wire [7:0] apu_reg [0:3];
-  wire qfr_clk;         // 240 Hz
-  wire hfr_clk;         // 120 Hz
+  wire qtr_clk;  // 240 Hz
+  wire hlf_clk;  // 120 Hz
   wire signed [4:0] p1_out;
   // wire signed [15:0] p2_out;
   assign dac = p1_out;
@@ -39,26 +39,26 @@ module chiptune (
   );
 
   frame_counter frame_counter_inst (
-    .clk       (clk),
-    .fc_qfr_clk(qfr_clk),
-    .fc_hfr_clk(hfr_clk)
+    .clk    (clk),
+    .qtr_clk(qtr_clk),
+    .hlf_clk(hlf_clk)
   );
   
   pulse pulse_inst_1 (
-    .in_apu_clk(clk),
-    .in_qfr_clk(qfr_clk),
-    .in_hfr_clk(hfr_clk),
-    .reg_0     (apu_reg[0]),
-    .reg_1     (apu_reg[1]),
-    .reg_2     (apu_reg[2]),
-    .reg_3     (apu_reg[3]),
-    .pulse_out (p1_out)
+    .apu_clk  (clk),
+    .qtr_clk  (qtr_clk),
+    .hlf_clk  (hlf_clk),
+    .reg_0    (apu_reg[0]),
+    .reg_1    (apu_reg[1]),
+    .reg_2    (apu_reg[2]),
+    .reg_3    (apu_reg[3]),
+    .pulse_out(p1_out)
   );
 
   // pulse pulse_inst_2 (
-  //   .in_apu_clk(clk),
-  //   .in_qfr_clk(qfr_clk),
-  //   .in_hfr_clk(hfr_clk),
+  //   .apu_clk(clk),
+  //   .qtr_clk(qtr_clk),
+  //   .hlf_clk(hlf_clk),
   //   .reg_0     (apu_reg[4]),
   //   .reg_1     (apu_reg[5]),
   //   .reg_2     (apu_reg[6]),

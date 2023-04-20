@@ -1,13 +1,16 @@
+// DEBUG Design too big
+// Attempting to reduce registers in reset logic
+
 `default_nettype none
 
 module pulse (
-  input wire               in_apu_clk,
-  input wire               in_qfr_clk,
-  input wire               in_hfr_clk,
-  input wire        [ 7:0] reg_0,
-  input wire        [ 7:0] reg_1,
-  input wire        [ 7:0] reg_2,
-  input wire        [ 7:0] reg_3,
+  input wire              apu_clk,
+  input wire              qtr_clk,
+  input wire              hlf_clk,
+  input wire        [7:0] reg_0,
+  input wire        [7:0] reg_1,
+  input wire        [7:0] reg_2,
+  input wire        [7:0] reg_3,
   output reg signed [4:0] pulse_out = 0
 );
 
@@ -79,19 +82,22 @@ module pulse (
   
   reg        length_counter_reset = 0;
   reg [ 7:0] length_counter = 0;
-  reg [31:0] lc_list = 0;
+  // reg [31:0] lc_list = 0;
+  reg [4:0] lc_list = 0;
   
-  always @( posedge in_hfr_clk ) begin
+  always @( posedge hlf_clk ) begin
     if ( length_counter_reset ) begin
       length_counter_reset <= 0;
       length_counter       <= length_preload;
-      lc_list              <= {reg_3, reg_2, reg_1, reg_0};
+      // lc_list              <= {reg_3, reg_2, reg_1, reg_0};
+      lc_list              <= length_select;
     end
     else begin
       if ( !counter_enable && (length_counter != 0) )
         length_counter <= length_counter - 1;
 
-      if ( lc_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      // if ( lc_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      if ( lc_list != length_select ) 
         length_counter_reset <= 1;
     end
   end
@@ -101,14 +107,16 @@ module pulse (
   reg [ 3:0] envlope_prescale = 0;
   reg [ 3:0] envelope_counter = 0;
   reg [ 3:0] envelope_out = 0;
-  reg [31:0] env_list = 0;
+  // reg [31:0] env_list = 0;
+  reg [3:0] env_list = 0;
 
-  always @( posedge in_qfr_clk ) begin
+  always @( posedge qtr_clk ) begin
     if ( envelope_start ) begin
       envelope_start   <= 0;
       envlope_prescale <= envelope_period;
       envelope_counter <= ~0;
-      env_list         <= {reg_3, reg_2, reg_1, reg_0};
+      // env_list         <= {reg_3, reg_2, reg_1, reg_0};
+      env_list         <= envelope_period;
     end
     else begin
       if ( envlope_prescale == 0 ) begin
@@ -127,7 +135,8 @@ module pulse (
       else 
         envelope_out <= envelope_counter;
       
-      if ( env_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      // if ( env_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      if ( env_list != envelope_period ) 
         envelope_start <= 1;
     end
 
@@ -137,14 +146,16 @@ module pulse (
   reg        swp_reload = 0;
   reg [ 2:0] swp_div = 0;
   reg [10:0] timer_preload = 0;
-  reg [31:0] swp_list = 0;
+  // reg [31:0] swp_list = 0;
+  reg [23:0] swp_list = 0;
 
-  always @( posedge in_hfr_clk ) begin
+  always @( posedge hlf_clk ) begin
     if ( swp_reload ) begin
       swp_reload     <= 0;
       swp_div        <= sweep_period;
       timer_preload  <= wavelength;
-      swp_list       <= {reg_3, reg_2, reg_1, reg_0};
+      // swp_list       <= {reg_3, reg_2, reg_1, reg_0};
+      swp_list       <= {reg_3, reg_2, reg_1};
 
       // Adjust pulse channel period
       // Eventually need to check if target period > 0x7ff
@@ -170,7 +181,8 @@ module pulse (
           timer_preload <= timer_preload - (wavelength >> sweep_shift);
       end
 
-      if ( swp_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      // if ( swp_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      if ( swp_list != {reg_3, reg_2, reg_1} ) 
         swp_reload <= 1;
     end
   end
@@ -179,9 +191,9 @@ module pulse (
   reg        seq_reset        = 0;
   reg [10:0] timer_counter    = 0;
   reg [ 2:0] duty_cycle_index = 0;
-  reg [31:0] seq_list           = 0;
+  reg [31:0] seq_list         = 0;
 
-  always @( posedge in_apu_clk ) begin
+  always @( posedge apu_clk ) begin
     if ( seq_reset ) begin
       seq_reset        <= 0;
       duty_cycle_index <= 0;
