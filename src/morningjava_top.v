@@ -28,7 +28,7 @@ module morningjava_top (
   wire controller_tdi;
   wire controller_tms;
   wire rtck;
-  wire [3:0] dac;
+  wire [4:0] dac;
   
   genvar i;
 
