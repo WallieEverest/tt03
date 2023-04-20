@@ -132,16 +132,16 @@ module pulse (
   reg [ 3:0] envlope_prescale = 0;
   reg [ 3:0] envelope_counter = 0;
   reg [ 3:0] envelope_out = 0;
-  // reg [31:0] env_list = 0;
-  reg [3:0] env_list = 0;
+  reg [31:0] env_list = 0;
+  // reg [3:0] env_list = 0;
 
   always @( posedge qtr_clk ) begin
     if ( envelope_start ) begin
       envelope_start   <= 0;
       envlope_prescale <= envelope_period;
       envelope_counter <= ~0;
-      // env_list         <= {reg_3, reg_2, reg_1, reg_0};
-      env_list         <= envelope_period;
+      env_list         <= {reg_3, reg_2, reg_1, reg_0};
+      // env_list         <= envelope_period;
     end else begin
       if ( envlope_prescale == 0 ) begin
         envlope_prescale <= envelope_period;
@@ -158,8 +158,8 @@ module pulse (
       else 
         envelope_out <= envelope_counter;
       
-      // if ( env_list != {reg_3, reg_2, reg_1, reg_0} ) 
-      if ( env_list != envelope_period ) 
+      if ( env_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      // if ( env_list != envelope_period ) 
         envelope_start <= 1;
     end
   end
@@ -177,18 +177,27 @@ module pulse (
       timer_counter    <= timer_preload;
       seq_list         <= {reg_3, reg_2, reg_1, reg_0};
     end
+
+    if ( length_counter != 0 )
+      if (timer_counter == 0) begin
+        timer_counter <= timer_preload;
+        duty_cycle_index <= duty_cycle_index - 1;
+        if ( ( duty_cycle >> duty_cycle_index ) & 8'h1 ) 
+          pulse_out <=  envelope_out;
+        else 
+          pulse_out <= -envelope_out;            
+      end else
+        timer_counter <= timer_counter - 1;
+
+    // if ( (timer_counter == 0) && (length_counter != 0) ) begin
+    //   if ( ( duty_cycle >> duty_cycle_index ) & 8'h1 ) 
+    //     pulse_out <=  envelope_out;
+    //   else 
+    //     pulse_out <= -envelope_out;            
+    // end
+    // else if ( seq_list != {reg_3, reg_2, reg_1, reg_0} )
     
-    if ( (timer_counter == 0) && (length_counter != 0) ) begin
-      timer_counter <= timer_preload;
-      duty_cycle_index <= duty_cycle_index - 1;
-        
-      if ( ( duty_cycle >> duty_cycle_index ) & 8'h1 ) 
-        pulse_out <=  envelope_out;
-      else 
-        pulse_out <= -envelope_out;            
-    end else if ( length_counter != 0 ) 
-      timer_counter <= timer_counter - 1;
-    else if ( seq_list != {reg_3, reg_2, reg_1, reg_0} )
+    if ( seq_list != {reg_3, reg_2, reg_1, reg_0} )
       seq_reset <= 1;
   end
   
