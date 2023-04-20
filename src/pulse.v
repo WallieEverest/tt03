@@ -12,6 +12,7 @@ module pulse (
   input wire        [7:0] reg_1,
   input wire        [7:0] reg_2,
   input wire        [7:0] reg_3,
+  input wire              change,
   output reg signed [4:0] pulse_out = 0
 );
 
@@ -86,7 +87,8 @@ module pulse (
   reg        swp_reload = 0;
   reg [ 2:0] swp_div = 0;
   reg [10:0] timer_preload = 0;
-  reg [31:0] swp_list = 0;
+  // reg [31:0] swp_list = 0;
+  reg        swp_list = 0;
 
   always @( posedge hlf_clk ) begin
     if ( swp_reload ) begin
@@ -94,7 +96,8 @@ module pulse (
       swp_reload     <= 0;
       swp_div        <= sweep_period;
       timer_preload  <= wavelength;
-      swp_list       <= {reg_3, reg_2, reg_1, reg_0};
+      // swp_list       <= {reg_3, reg_2, reg_1, reg_0};
+      swp_list       <= change;
 
       // Adjust pulse channel period
       // Eventually need to check if target period > 0x7ff
@@ -122,7 +125,8 @@ module pulse (
           timer_preload <= timer_preload - (wavelength >> sweep_shift);
       end
 
-      if ( swp_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      // if ( swp_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      if ( swp_list != change ) 
         swp_reload <= 1;
     end
   end
@@ -132,16 +136,16 @@ module pulse (
   reg [ 3:0] envlope_prescale = 0;
   reg [ 3:0] envelope_counter = 0;
   reg [ 3:0] envelope_out = 0;
-  reg [31:0] env_list = 0;
-  // reg [3:0] env_list = 0;
+  // reg [31:0] env_list = 0;
+  reg env_list = 0;
 
   always @( posedge qtr_clk ) begin
     if ( envelope_start ) begin
       envelope_start   <= 0;
       envlope_prescale <= envelope_period;
       envelope_counter <= ~0;
-      env_list         <= {reg_3, reg_2, reg_1, reg_0};
-      // env_list         <= envelope_period;
+      // env_list         <= {reg_3, reg_2, reg_1, reg_0};
+      env_list         <= change;
     end else begin
       if ( envlope_prescale == 0 ) begin
         envlope_prescale <= envelope_period;
@@ -158,8 +162,8 @@ module pulse (
       else 
         envelope_out <= envelope_counter;
       
-      if ( env_list != {reg_3, reg_2, reg_1, reg_0} ) 
-      // if ( env_list != envelope_period ) 
+      // if ( env_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      if ( env_list != change ) 
         envelope_start <= 1;
     end
   end
@@ -168,14 +172,16 @@ module pulse (
   reg        seq_reset        = 0;
   reg [10:0] timer_counter    = 0;
   reg [ 2:0] duty_cycle_index = 0;
-  reg [31:0] seq_list         = 0;
+  // reg [31:0] seq_list         = 0;
+  reg seq_list         = 0;
 
   always @( posedge apu_clk ) begin
     if ( seq_reset ) begin
       seq_reset        <= 0;
       duty_cycle_index <= 0;
       timer_counter    <= timer_preload;
-      seq_list         <= {reg_3, reg_2, reg_1, reg_0};
+      // seq_list         <= {reg_3, reg_2, reg_1, reg_0};
+      seq_list         <= change;
     end
 
     if ( length_counter != 0 )
@@ -197,7 +203,8 @@ module pulse (
     // end
     // else if ( seq_list != {reg_3, reg_2, reg_1, reg_0} )
     
-    if ( seq_list != {reg_3, reg_2, reg_1, reg_0} )
+    // if ( seq_list != {reg_3, reg_2, reg_1, reg_0} )
+    if ( seq_list != change )
       seq_reset <= 1;
   end
   
