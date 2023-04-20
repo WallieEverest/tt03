@@ -80,29 +80,77 @@ module pulse (
     endcase
   end
   
-  reg        length_counter_reset = 0;
+  // reg        length_counter_reset = 0;
   reg [ 7:0] length_counter = 0;
   // reg [31:0] lc_list = 0;
-  reg [4:0] lc_list = 0;
-  
+  // reg [4:0] lc_list = 0;
+
+  // Sweep unit
+  reg        swp_reload = 0;
+  reg [ 2:0] swp_div = 0;
+  reg [10:0] timer_preload = 0;
+  // reg [31:0] swp_list = 0;
+  reg [23:0] swp_list = 0;
+
   always @( posedge hlf_clk ) begin
-    if ( length_counter_reset ) begin
-      length_counter_reset <= 0;
+    // if ( length_counter_reset ) begin
+    //   length_counter_reset <= 0;
+    //   length_counter       <= length_preload;
+    //   // lc_list              <= {reg_3, reg_2, reg_1, reg_0};
+    //   lc_list              <= length_select;
+    // end
+    // else begin
+    //   if ( !counter_enable && (length_counter != 0) )
+    //     length_counter <= length_counter - 1;
+
+    //   // if ( lc_list != {reg_3, reg_2, reg_1, reg_0} ) 
+    //   if ( lc_list != length_select ) 
+    //     length_counter_reset <= 1;
+    // end
+
+    if ( swp_reload ) begin
+      // length_counter_reset <= 0;
       length_counter       <= length_preload;
-      // lc_list              <= {reg_3, reg_2, reg_1, reg_0};
-      lc_list              <= length_select;
-    end
-    else begin
+
+      swp_reload     <= 0;
+      swp_div        <= sweep_period;
+      timer_preload  <= wavelength;
+      // swp_list       <= {reg_3, reg_2, reg_1, reg_0};
+      swp_list       <= {reg_3, reg_2, reg_1};
+
+      // Adjust pulse channel period
+      // Eventually need to check if target period > 0x7ff
+      // and other checks as well
+      if ( (swp_div == 0) && sweep_enable ) 
+        // Sweep down to lower frequencies
+        if ( !sweep_decrement ) 
+          timer_preload <= timer_preload + (wavelength >> sweep_shift);
+        else  // Sweep up to higher frequencies
+          timer_preload <= timer_preload - (wavelength >> sweep_shift);
+    end else begin
       if ( !counter_enable && (length_counter != 0) )
         length_counter <= length_counter - 1;
 
-      // if ( lc_list != {reg_3, reg_2, reg_1, reg_0} ) 
-      if ( lc_list != length_select ) 
-        length_counter_reset <= 1;
+      if ( swp_div != 0 ) 
+        swp_div <= swp_div - 1;
+      else if ( sweep_enable ) begin
+        swp_div <= sweep_period;
+
+        // Adjust pulse channel period
+        // Eventually need to implement other checks as well
+        if ( !sweep_decrement ) // Sweep down to lower frequencies
+          timer_preload <= timer_preload + (wavelength >> sweep_shift);
+        else  // Sweep up to higher frequencies
+          timer_preload <= timer_preload - (wavelength >> sweep_shift);
+      end
+
+      // if ( swp_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      if ( swp_list != {reg_3, reg_2, reg_1} ) 
+        swp_reload <= 1;
     end
   end
 
-  // Envelope unit
+ // Envelope unit
   reg        envelope_start = 0;
   reg [ 3:0] envlope_prescale = 0;
   reg [ 3:0] envelope_counter = 0;
@@ -137,51 +185,6 @@ module pulse (
       if ( env_list != envelope_period ) 
         envelope_start <= 1;
     end
-
-  end // end always
-
-  // Sweep unit
-  reg        swp_reload = 0;
-  reg [ 2:0] swp_div = 0;
-  reg [10:0] timer_preload = 0;
-  // reg [31:0] swp_list = 0;
-  reg [23:0] swp_list = 0;
-
-  always @( posedge hlf_clk ) begin
-    if ( swp_reload ) begin
-      swp_reload     <= 0;
-      swp_div        <= sweep_period;
-      timer_preload  <= wavelength;
-      // swp_list       <= {reg_3, reg_2, reg_1, reg_0};
-      swp_list       <= {reg_3, reg_2, reg_1};
-
-      // Adjust pulse channel period
-      // Eventually need to check if target period > 0x7ff
-      // and other checks as well
-      if ( (swp_div == 0) && sweep_enable ) 
-        // Sweep down to lower frequencies
-        if ( !sweep_decrement ) 
-          timer_preload <= timer_preload + (wavelength >> sweep_shift);
-        else  // Sweep up to higher frequencies
-          timer_preload <= timer_preload - (wavelength >> sweep_shift);
-    end else begin
-      if ( swp_div != 0 ) 
-        swp_div <= swp_div - 1;
-      else if ( sweep_enable ) begin
-        swp_div <= sweep_period;
-
-        // Adjust pulse channel period
-        // Eventually need to implement other checks as well
-        if ( !sweep_decrement ) // Sweep down to lower frequencies
-          timer_preload <= timer_preload + (wavelength >> sweep_shift);
-        else  // Sweep up to higher frequencies
-          timer_preload <= timer_preload - (wavelength >> sweep_shift);
-      end
-
-      // if ( swp_list != {reg_3, reg_2, reg_1, reg_0} ) 
-      if ( swp_list != {reg_3, reg_2, reg_1} ) 
-        swp_reload <= 1;
-    end
   end
 
   // Timer & sequencer
@@ -206,9 +209,7 @@ module pulse (
         pulse_out <=  envelope_out;
       else 
         pulse_out <= -envelope_out;            
-    end
-    
-    else if ( length_counter != 0 ) 
+    end else if ( length_counter != 0 ) 
       timer_counter <= timer_counter - 1;
     else if ( seq_list != {reg_3, reg_2, reg_1, reg_0} )
       seq_reset <= 1;
