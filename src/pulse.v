@@ -87,16 +87,13 @@ module pulse (
   reg        swp_reload = 0;
   reg [ 2:0] swp_div = 0;
   reg [10:0] timer_preload = 0;
-  // reg [31:0] swp_list = 0;
   reg        swp_list = 0;
 
   always @( posedge hlf_clk ) begin
     if ( swp_reload ) begin
       length_counter <= length_preload;
-      swp_reload     <= 0;
       swp_div        <= sweep_period;
       timer_preload  <= wavelength;
-      // swp_list       <= {reg_3, reg_2, reg_1, reg_0};
       swp_list       <= change;
 
       // Adjust pulse channel period
@@ -125,66 +122,60 @@ module pulse (
           timer_preload <= timer_preload - (wavelength >> sweep_shift);
       end
 
-      // if ( swp_list != {reg_3, reg_2, reg_1, reg_0} ) 
-      if ( swp_list != change ) 
+      if ( swp_reload )
+        swp_reload <= 0;
+      else if ( swp_list != change ) 
         swp_reload <= 1;
     end
   end
 
  // Envelope unit
   reg        envelope_start = 0;
-  reg [ 3:0] envlope_prescale = 0;
+  reg [ 3:0] envelope_prescale = 0;
   reg [ 3:0] envelope_counter = 0;
   reg [ 3:0] envelope_out = 0;
-  // reg [31:0] env_list = 0;
-  reg env_list = 0;
+  reg        env_list = 0;
 
   always @( posedge qtr_clk ) begin
     if ( envelope_start ) begin
-      envelope_start   <= 0;
-      envlope_prescale <= envelope_period;
+      envelope_prescale <= envelope_period;
       envelope_counter <= ~0;
-      // env_list         <= {reg_3, reg_2, reg_1, reg_0};
       env_list         <= change;
     end else begin
-      if ( envlope_prescale == 0 ) begin
-        envlope_prescale <= envelope_period;
+      if ( envelope_prescale == 0 ) begin
+        envelope_prescale <= envelope_period;
 
         if ( envelope_counter != 0 ) 
           envelope_counter <= envelope_counter - 1;
         else if ( counter_enable ) 
           envelope_counter <= ~0;
       end else 
-        envlope_prescale <= envlope_prescale - 1;
+        envelope_prescale <= envelope_prescale - 1;
       
       if ( envelope_decay ) 
         envelope_out <= envelope_period;
       else 
         envelope_out <= envelope_counter;
-      
-      // if ( env_list != {reg_3, reg_2, reg_1, reg_0} ) 
-      if ( env_list != change ) 
-        envelope_start <= 1;
-    end
+    end 
+
+    if ( envelope_start )
+      envelope_start <= 0;
+    else if ( env_list != change ) 
+      envelope_start <= 1;
   end
 
   // Timer & sequencer
-  reg        seq_reset        = 0;
-  reg [10:0] timer_counter    = 0;
+  reg        seq_reset = 0;
+  reg [10:0] timer_counter = 0;
   reg [ 2:0] duty_cycle_index = 0;
-  // reg [31:0] seq_list         = 0;
-  reg seq_list         = 0;
+  reg        seq_list = 0;
 
   always @( posedge apu_clk ) begin
     if ( seq_reset ) begin
-      seq_reset        <= 0;
       duty_cycle_index <= 0;
       timer_counter    <= timer_preload;
-      // seq_list         <= {reg_3, reg_2, reg_1, reg_0};
       seq_list         <= change;
-    end
-
-    if ( length_counter != 0 )
+    end else if ( length_counter != 0 )
       if (timer_counter == 0) begin
         timer_counter <= timer_preload;
         duty_cycle_index <= duty_cycle_index - 1;
@@ -195,16 +186,9 @@ module pulse (
       end else
         timer_counter <= timer_counter - 1;
 
-    // if ( (timer_counter == 0) && (length_counter != 0) ) begin
-    //   if ( ( duty_cycle >> duty_cycle_index ) & 8'h1 ) 
-    //     pulse_out <=  envelope_out;
-    //   else 
-    //     pulse_out <= -envelope_out;            
-    // end
-    // else if ( seq_list != {reg_3, reg_2, reg_1, reg_0} )
-    
-    // if ( seq_list != {reg_3, reg_2, reg_1, reg_0} )
-    if ( seq_list != change )
+    if ( seq_reset )
+      seq_reset <= 0;
+    else if ( seq_list != change )
       seq_reset <= 1;
   end
   
