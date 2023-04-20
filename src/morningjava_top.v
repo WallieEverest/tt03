@@ -16,7 +16,7 @@ module morningjava_top (
   input  wire [7:0] io_in,
   output wire [7:0] io_out
 );
-  localparam NUM_DESIGNS = 5;  // 250 for TT03 ASIC, 5 for test FPGA
+  localparam NUM_DESIGNS = 3;  // 250 for TT03 ASIC, 3 for test FPGA
   localparam NUM_IOS = 8;
 
   wire tck [0:NUM_DESIGNS];
@@ -28,13 +28,14 @@ module morningjava_top (
   wire controller_tdi;
   wire controller_tms;
   wire rtck;
+  wire [3:0] dac;
+  
   genvar i;
 
   // Pin assignments
-  assign io_out[3:0]      = o_data[1][3:0];             // CH1 DAC
-  assign io_out[4]        = rtck;
-  assign io_out[5]        = tck[NUM_DESIGNS];
-  assign io_out[6]        = o_data[1][4];               // CH2 DAC (partial)
+  assign io_out[4:0]      = dac;                        // CH1 DAC
+  assign io_out[5]        = rtck;
+  assign io_out[6]        = tck[NUM_DESIGNS];
   assign io_out[7]        = td[NUM_DESIGNS];            // TDO
   wire   select           = 8'd1;                       // project selection
   wire   clk              = io_in[0];
@@ -45,11 +46,19 @@ module morningjava_top (
   assign tms[0] =  (mode) ? io_in[6] : controller_tms;  // TMS
   assign td[0]  =  (mode) ? io_in[7] : controller_tdi;  // TDI
 
+
   // Bit-clock generator derived from asynchronous serial data input
   clk_gen clk_gen_inst (
     .clk(uart_clk),
     .rx (io_in[7]),
     .rtck(rtck)
+  );
+
+  chiptune chiptune_top(
+    .clk(uart_clk),
+    .sck(io_in[5]),
+    .sdi(io_in[7]),
+    .dac(dac)
   );
 
   // Internal scan chain controller (not implemented)
@@ -88,32 +97,20 @@ module morningjava_top (
   
   // *** Project list ***
   // User_01
-  chiptune chiptune_top(
+  invert invert_inst(
     .io_in (i_data[1]),
     .io_out(o_data[1])
   );
 
   // User_02
-  invert invert_inst(
+  roll roll_inst(
     .io_in (i_data[2]),
     .io_out(o_data[2])
   );
 
   // User_03
-  parity parity_inst(
+  ecc ecc_inst(
     .io_in (i_data[3]),
     .io_out(o_data[3])
-  );
-
-  // User_04
-  roll roll_inst(
-    .io_in (i_data[4]),
-    .io_out(o_data[4])
-  );
-
-  // User_05
-  ecc ecc_inst(
-    .io_in (i_data[5]),
-    .io_out(o_data[5])
   );
 endmodule

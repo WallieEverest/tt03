@@ -100,6 +100,26 @@ The audio portion of the project consists of two rectangular pulse generators. E
 
 The frequency range of the project is limited by the legacy scanchain, but mid-range frequencies are acceptable. Additional triangle and noise modules will be added in future work when more bandwidth is available.
 
+### ChipTune Pin Assignments
+| Signal     | Name     |
+| ---------- | ---------|
+| io_in[0]   | CLOCK    |
+| io_in[1]   | SPARE    |
+| io_in[2]   | SPARE    |
+| io_in[3]   | MODE     |
+| io_in[4]   | BAUD_CLK |
+| io_in[5]   | TCK      |
+| io_in[6]   | TMS      |
+| io_in[7]   | TDO      |
+| io_out[0]  | DAC[0]   |
+| io_out[1]  | DAC[1]   |
+| io_out[2]  | DAC[2]   |
+| io_out[3]  | DAC[3]   |
+| io_out[4]  | DAC[4]   |
+| io_out[5]  | REF_CLK  |
+| io_out[6]  | RTCK     |
+| io_out[7]  | TDO      |
+
 ## Design For Test Considerations
 
 An isolated instance of scanchain version 2 has been tested on an FPGA platform with good results. A shift rate of 3.7 MHz permits communication with the computer at 115,200 baud. Longer scan chains do not affect throughput until multiplexer delays become dominant. For an FPGA, 75% of the timing delays are attributed to routing resources.

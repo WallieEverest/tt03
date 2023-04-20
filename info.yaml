@@ -189,12 +189,14 @@ documentation:
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test: |
     The ChipTune project can be  interfaced to a computer COM port at 300 baud.
-    The project's scanchain is updated at 9600 Hz such that a 4800 Hz clock is available at `io_in[4]`.
+    The project's scanchain is updated at 9600 Hz such that a 4800 Hz UART clock is available at `io_in[4]`.
+    The system clock on `io_in[0]` may also be 4800 Hz.
     An external bit clock must be provided on `io_in[5]` with a rising edge in the center of the bit period.
-    This clock may be sourced from the bit-aligned reference clock on io_out[4].
+    This clock may be sourced from the bit-aligned reference clock on io_out[5].
     Serial data is received on `io_in[7]`.
     Serial data is decoded by the device as an address when `io_in[6]` = 0, and as data when `io_in[6]` = 1.
-    A 4-bit DAC output is available on `io_out[3:0]`.
+    A 4-bit DAC output is available on `io_out[4:0]`.
+    The mode pin, `io_in[3]` must stay high for this version of the design.
 
 # A description of what the inputs do
   inputs:               
@@ -213,9 +215,9 @@ documentation:
     - io_out[1] (DAC_1)
     - io_out[2] (DAC_2)
     - io_out[3] (DAC_3)
-    - io_out[4] (REF_CLK)
-    - io_out[5] (RTCK)
-    - io_out[6] (LED)
+    - io_out[4] (DAC_4)
+    - io_out[5] (REF_CLK)
+    - io_out[6] (RTCK)
     - io_out[7] (TDO)
 
 # The following fields are optional

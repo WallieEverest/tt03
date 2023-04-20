@@ -41,7 +41,7 @@ module user_project_wrapper #(
   output wire [MPRJ_IO_PADS-1:0]  io_oeb
 );
 
-  localparam NUM_DESIGNS = 5;  // 250 for TT03 ASIC, 5 for test FPGA
+  localparam NUM_DESIGNS = 3;  // 250 for TT03 ASIC, 3 for test FPGA
   localparam NUM_IOS = 8;
 
   wire tms [0:NUM_DESIGNS];
@@ -132,21 +132,9 @@ module user_project_wrapper #(
   );
 
   // User_03
-  parity parity_inst(
+  ecc ecc_inst(
     .io_in (i_data[3]),
     .io_out(o_data[3])
-  );
-
-  // User_04
-  roll roll_inst(
-    .io_in (i_data[4]),
-    .io_out(o_data[4])
-  );
-
-  // User_05
-  ecc ecc_inst(
-    .io_in (i_data[5]),
-    .io_out(o_data[5])
   );
 
 endmodule

@@ -8,7 +8,7 @@ module pulse (
   input wire        [ 7:0] reg_1,
   input wire        [ 7:0] reg_2,
   input wire        [ 7:0] reg_3,
-  output reg signed [15:0] pulse_out = 0
+  output reg signed [4:0] pulse_out = 0
 );
 
   // Input registers
@@ -194,9 +194,9 @@ module pulse (
       duty_cycle_index <= duty_cycle_index - 1;
         
       if ( ( duty_cycle >> duty_cycle_index ) & 8'h1 ) 
-        pulse_out <=  (envelope_out << 11);
+        pulse_out <=  envelope_out;
       else 
-        pulse_out <= -(envelope_out << 11);            
+        pulse_out <= -envelope_out;            
     end
     
     else if ( length_counter != 0 ) 

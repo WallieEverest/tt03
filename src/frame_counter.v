@@ -7,11 +7,12 @@ module frame_counter (
   output reg  fc_hfr_clk = 0   // approx. 120 Hz
 );
 
+localparam PRESCALE = 4800/240/2;  // frame rate
 reg [10:0] seq = 0;
 
 // Step through Mode 0 4-step sequence
 always @ ( posedge clk ) begin
-  if ( seq == 1864 ) begin
+  if ( seq == PRESCALE-1 ) begin
     seq <= 0;
     fc_qfr_clk <= ~fc_qfr_clk;
     if (fc_qfr_clk == 0)

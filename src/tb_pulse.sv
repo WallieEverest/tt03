@@ -1,7 +1,7 @@
 `default_nettype none
 `timescale 1ns/100ps
 
-module tb_pulse ();
+module a_tb_pulse ();
 
   reg  [7:0] apu_reg [0:31];
   reg  apu_clk = 0;  // 894,720 Hz

@@ -3,14 +3,14 @@
 module decoder (
   input  wire sck,
   input  wire sdi,
-  output reg  [7:0] apu_reg_0,
-  output reg  [7:0] apu_reg_1,
-  output reg  [7:0] apu_reg_2,
-  output reg  [7:0] apu_reg_3,
-  output reg  [7:0] apu_reg_4,
-  output reg  [7:0] apu_reg_5,
-  output reg  [7:0] apu_reg_6,
-  output reg  [7:0] apu_reg_7
+  output reg  [7:0] apu_reg_0 = 0,
+  output reg  [7:0] apu_reg_1 = 0,
+  output reg  [7:0] apu_reg_2 = 0,
+  output reg  [7:0] apu_reg_3 = 0,
+  output reg  [7:0] apu_reg_4 = 0,
+  output reg  [7:0] apu_reg_5 = 0,
+  output reg  [7:0] apu_reg_6 = 0,
+  output reg  [7:0] apu_reg_7 = 0
 );
 
   localparam WIDTH = 10;  // number of bits in message
@@ -35,7 +35,7 @@ module decoder (
     else if ((shift[WIDTH-1] == START) || (bit_count != WIDTH-1))  // synchronize with IDLE pattern
       bit_count <= bit_count - 1;
 
-    if (msg_sync)  // capture user inbound data
+    if (msg_sync) begin // capture user inbound data
       hold <= data;  // hold first 4-bits and wait for remaining half
       case (addr)
         1:  apu_reg_0 <= {data, hold};
@@ -47,6 +47,7 @@ module decoder (
         13: apu_reg_6 <= {data, hold};
         15: apu_reg_7 <= {data, hold};
       endcase
+    end
   end
 
 endmodule
