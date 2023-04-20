@@ -23,13 +23,13 @@ module controller (
   output reg tdi = 0
 ) /* synthesis syn_hier="fixed" */;
 
-always @(posedge clk) begin
-  if (reset) begin
-    o_pins <= ~i_pins;
-    tck    <= rtck;
-    tms    <= (addr == 0);
-    tdi    <= tdo;
-  end
-end
+// always @(posedge clk) begin
+//   if (reset) begin
+//     o_pins <= ~i_pins;
+//     tck    <= rtck;
+//     tms    <= (addr == 0);
+//     tdi    <= tdo;
+//   end
+// end
 
 endmodule

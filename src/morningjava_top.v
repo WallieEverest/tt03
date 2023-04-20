@@ -16,7 +16,7 @@ module morningjava_top (
   input  wire [7:0] io_in,
   output wire [7:0] io_out
 );
-  localparam NUM_DESIGNS = 3;  // 250 for TT03 ASIC, 3 for test FPGA
+  localparam NUM_DESIGNS = 2;  // 250 for TT03 ASIC, 3 for test FPGA
   localparam NUM_IOS = 8;
 
   wire tck [0:NUM_DESIGNS];
@@ -103,14 +103,9 @@ module morningjava_top (
   );
 
   // User_02
-  roll roll_inst(
+  ecc ecc_inst(
     .io_in (i_data[2]),
     .io_out(o_data[2])
   );
-
-  // User_03
-  ecc ecc_inst(
-    .io_in (i_data[3]),
-    .io_out(o_data[3])
-  );
+  
 endmodule
