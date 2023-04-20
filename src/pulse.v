@@ -82,21 +82,24 @@ module pulse (
   
   reg        length_counter_reset = 0;
   reg [ 7:0] length_counter = 0;
-  reg [31:0] lc_list = 0;
+  // reg [31:0] lc_list = 0;
+  reg [15:0] lc_list = 0;
   // reg [4:0] lc_list = 0;
   
   always @( posedge hlf_clk ) begin
     if ( length_counter_reset ) begin
       length_counter_reset <= 0;
       length_counter       <= length_preload;
-      lc_list              <= {reg_3, reg_2, reg_1, reg_0};
+      // lc_list              <= {reg_3, reg_2, reg_1, reg_0};
+      lc_list              <= {reg_3, reg_0};
       // lc_list              <= length_select;
     end
     else begin
       if ( !counter_enable && (length_counter != 0) )
         length_counter <= length_counter - 1;
 
-      if ( lc_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      // if ( lc_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      if ( lc_list != {reg_3, reg_0} ) 
       // if ( lc_list != length_select ) 
         length_counter_reset <= 1;
     end
@@ -117,8 +120,7 @@ module pulse (
       envelope_counter <= ~0;
       // env_list         <= {reg_3, reg_2, reg_1, reg_0};
       env_list         <= envelope_period;
-    end
-    else begin
+    end else begin
       if ( envlope_prescale == 0 ) begin
         envlope_prescale <= envelope_period;
 
@@ -126,8 +128,7 @@ module pulse (
           envelope_counter <= envelope_counter - 1;
         else if ( counter_enable ) 
           envelope_counter <= ~0;
-      end
-      else 
+      end else 
         envlope_prescale <= envlope_prescale - 1;
       
       if ( envelope_decay ) 
@@ -166,8 +167,7 @@ module pulse (
           timer_preload <= timer_preload + (wavelength >> sweep_shift);
         else  // Sweep up to higher frequencies
           timer_preload <= timer_preload - (wavelength >> sweep_shift);
-    end
-    else begin
+    end else begin
       if ( swp_div != 0 ) 
         swp_div <= swp_div - 1;
       else if ( sweep_enable ) begin
