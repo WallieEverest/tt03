@@ -18,7 +18,7 @@ module decoder (
   output reg  [7:0] apu_reg_1 = 0,
   output reg  [7:0] apu_reg_2 = 0,
   output reg  [7:0] apu_reg_3 = 0,
-  output reg        change = 0
+  output reg        reg_change = 0
 );
 
   localparam WIDTH = 10;  // number of bits in message
@@ -46,7 +46,7 @@ module decoder (
     if (msg_sync) begin // capture user inbound data
       hold <= data;  // hold first 4-bits and wait for remaining half
       if (addr[0] == 1)
-        change <= ~change;  // toggle on register update
+        reg_change <= ~reg_change;  // toggle on register update
       case (addr)
         1:  apu_reg_0 <= {data, hold};
         3:  apu_reg_1 <= {data, hold};

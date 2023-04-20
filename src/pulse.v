@@ -1,6 +1,4 @@
 // File: pulse.v
-// DEBUG Design too big
-// Attempting to reduce registers in reset logic
 
 `default_nettype none
 
@@ -12,7 +10,7 @@ module pulse (
   input wire        [7:0] reg_1,
   input wire        [7:0] reg_2,
   input wire        [7:0] reg_3,
-  input wire              change,
+  input wire              reg_change,
   output reg signed [4:0] pulse_out = 0
 );
 
@@ -87,14 +85,14 @@ module pulse (
   reg        swp_reload = 0;
   reg [ 2:0] swp_div = 0;
   reg [10:0] timer_preload = 0;
-  reg        swp_list = 0;
+  reg        swp_change = 0;
 
   always @( posedge hlf_clk ) begin
     if ( swp_reload ) begin
       length_counter <= length_preload;
       swp_div        <= sweep_period;
       timer_preload  <= wavelength;
-      swp_list       <= change;
+      swp_change       <= reg_change;
 
       // Adjust pulse channel period
       // Eventually need to check if target period > 0x7ff
@@ -124,7 +122,7 @@ module pulse (
 
       if ( swp_reload )
         swp_reload <= 0;
-      else if ( swp_list != change ) 
+      else if ( swp_change != reg_change ) 
         swp_reload <= 1;
     end
   end
@@ -134,13 +132,13 @@ module pulse (
   reg [ 3:0] envelope_prescale = 0;
   reg [ 3:0] envelope_counter = 0;
   reg [ 3:0] envelope_out = 0;
-  reg        env_list = 0;
+  reg        env_change = 0;
 
   always @( posedge qtr_clk ) begin
     if ( envelope_start ) begin
       envelope_prescale <= envelope_period;
       envelope_counter <= ~0;
-      env_list         <= change;
+      env_change <= reg_change;
     end else begin
       if ( envelope_prescale == 0 ) begin
         envelope_prescale <= envelope_period;
@@ -160,7 +158,7 @@ module pulse (
 
     if ( envelope_start )
       envelope_start <= 0;
-    else if ( env_list != change ) 
+    else if ( env_change != reg_change ) 
       envelope_start <= 1;
   end
 
@@ -168,13 +166,13 @@ module pulse (
   reg        seq_reset = 0;
   reg [10:0] timer_counter = 0;
   reg [ 2:0] duty_cycle_index = 0;
-  reg        seq_list = 0;
+  reg        seq_change = 0;
 
   always @( posedge apu_clk ) begin
     if ( seq_reset ) begin
       duty_cycle_index <= 0;
       timer_counter    <= timer_preload;
-      seq_list         <= change;
+      seq_change         <= reg_change;
     end else if ( length_counter != 0 )
       if (timer_counter == 0) begin
         timer_counter <= timer_preload;
@@ -188,7 +186,7 @@ module pulse (
 
     if ( seq_reset )
       seq_reset <= 0;
-    else if ( seq_list != change )
+    else if ( seq_change != reg_change )
       seq_reset <= 1;
   end
   
