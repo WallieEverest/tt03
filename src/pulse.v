@@ -154,8 +154,8 @@ module pulse (
       swp_reload     <= 0;
       swp_div        <= sweep_period;
       timer_preload  <= wavelength;
-      // swp_list       <= {reg_3, reg_2, reg_1, reg_0};
-      swp_list       <= {reg_3, reg_2, reg_1};
+      swp_list       <= {reg_3, reg_2, reg_1, reg_0};
+      // swp_list       <= {reg_3, reg_2, reg_1};
 
       // Adjust pulse channel period
       // Eventually need to check if target period > 0x7ff
