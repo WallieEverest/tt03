@@ -89,8 +89,8 @@ module pulse (
   reg        swp_reload = 0;
   reg [ 2:0] swp_div = 0;
   reg [10:0] timer_preload = 0;
-  // reg [31:0] swp_list = 0;
-  reg [23:0] swp_list = 0;
+  reg [31:0] swp_list = 0;
+  // reg [23:0] swp_list = 0;
 
   always @( posedge hlf_clk ) begin
     // if ( length_counter_reset ) begin
@@ -115,8 +115,8 @@ module pulse (
       swp_reload     <= 0;
       swp_div        <= sweep_period;
       timer_preload  <= wavelength;
-      // swp_list       <= {reg_3, reg_2, reg_1, reg_0};
-      swp_list       <= {reg_3, reg_2, reg_1};
+      swp_list       <= {reg_3, reg_2, reg_1, reg_0};
+      // swp_list       <= {reg_3, reg_2, reg_1};
 
       // Adjust pulse channel period
       // Eventually need to check if target period > 0x7ff
@@ -144,8 +144,8 @@ module pulse (
           timer_preload <= timer_preload - (wavelength >> sweep_shift);
       end
 
-      // if ( swp_list != {reg_3, reg_2, reg_1, reg_0} ) 
-      if ( swp_list != {reg_3, reg_2, reg_1} ) 
+      if ( swp_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      // if ( swp_list != {reg_3, reg_2, reg_1} ) 
         swp_reload <= 1;
     end
   end
