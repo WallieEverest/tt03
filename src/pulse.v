@@ -107,16 +107,16 @@ module pulse (
   reg [ 3:0] envlope_prescale = 0;
   reg [ 3:0] envelope_counter = 0;
   reg [ 3:0] envelope_out = 0;
-  reg [31:0] env_list = 0;
-  // reg [3:0] env_list = 0;
+  // reg [31:0] env_list = 0;
+  reg [3:0] env_list = 0;
 
   always @( posedge qtr_clk ) begin
     if ( envelope_start ) begin
       envelope_start   <= 0;
       envlope_prescale <= envelope_period;
       envelope_counter <= ~0;
-      env_list         <= {reg_3, reg_2, reg_1, reg_0};
-      // env_list         <= envelope_period;
+      // env_list         <= {reg_3, reg_2, reg_1, reg_0};
+      env_list         <= envelope_period;
     end
     else begin
       if ( envlope_prescale == 0 ) begin
@@ -135,8 +135,8 @@ module pulse (
       else 
         envelope_out <= envelope_counter;
       
-      if ( env_list != {reg_3, reg_2, reg_1, reg_0} ) 
-      // if ( env_list != envelope_period ) 
+      // if ( env_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      if ( env_list != envelope_period ) 
         envelope_start <= 1;
     end
 
@@ -146,16 +146,16 @@ module pulse (
   reg        swp_reload = 0;
   reg [ 2:0] swp_div = 0;
   reg [10:0] timer_preload = 0;
-  reg [31:0] swp_list = 0;
-  // reg [23:0] swp_list = 0;
+  // reg [31:0] swp_list = 0;
+  reg [23:0] swp_list = 0;
 
   always @( posedge hlf_clk ) begin
     if ( swp_reload ) begin
       swp_reload     <= 0;
       swp_div        <= sweep_period;
       timer_preload  <= wavelength;
-      swp_list       <= {reg_3, reg_2, reg_1, reg_0};
-      // swp_list       <= {reg_3, reg_2, reg_1};
+      // swp_list       <= {reg_3, reg_2, reg_1, reg_0};
+      swp_list       <= {reg_3, reg_2, reg_1};
 
       // Adjust pulse channel period
       // Eventually need to check if target period > 0x7ff
@@ -181,8 +181,8 @@ module pulse (
           timer_preload <= timer_preload - (wavelength >> sweep_shift);
       end
 
-      if ( swp_list != {reg_3, reg_2, reg_1, reg_0} ) 
-      // if ( swp_list != {reg_3, reg_2, reg_1} ) 
+      // if ( swp_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      if ( swp_list != {reg_3, reg_2, reg_1} ) 
         swp_reload <= 1;
     end
   end
