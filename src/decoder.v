@@ -1,3 +1,14 @@
+// Title:   Serial register decoder
+// File:    decoder.v
+// Author:  Wallace Everest
+// Date:    12-APR-2023
+// URL:     https://github.com/wallieeverest/tt03
+// License: Apache 2.0
+//
+// Description:
+// Implementation:
+// Operation:
+
 `default_nettype none
 
 module decoder (

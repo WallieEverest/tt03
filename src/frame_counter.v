@@ -1,3 +1,5 @@
+// File: frame_counter.v
+
 `default_nettype none
 
 // Generate low-frequency clocks

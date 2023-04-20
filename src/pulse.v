@@ -1,3 +1,4 @@
+// File: pulse.v
 // DEBUG Design too big
 // Attempting to reduce registers in reset logic
 
@@ -131,16 +132,16 @@ module pulse (
   reg [ 3:0] envlope_prescale = 0;
   reg [ 3:0] envelope_counter = 0;
   reg [ 3:0] envelope_out = 0;
-  reg [31:0] env_list = 0;
-  // reg [3:0] env_list = 0;
+  // reg [31:0] env_list = 0;
+  reg [3:0] env_list = 0;
 
   always @( posedge qtr_clk ) begin
     if ( envelope_start ) begin
       envelope_start   <= 0;
       envlope_prescale <= envelope_period;
       envelope_counter <= ~0;
-      env_list         <= {reg_3, reg_2, reg_1, reg_0};
-      // env_list         <= envelope_period;
+      // env_list         <= {reg_3, reg_2, reg_1, reg_0};
+      env_list         <= envelope_period;
     end else begin
       if ( envlope_prescale == 0 ) begin
         envlope_prescale <= envelope_period;
@@ -157,8 +158,8 @@ module pulse (
       else 
         envelope_out <= envelope_counter;
       
-      if ( env_list != {reg_3, reg_2, reg_1, reg_0} ) 
-      // if ( env_list != envelope_period ) 
+      // if ( env_list != {reg_3, reg_2, reg_1, reg_0} ) 
+      if ( env_list != envelope_period ) 
         envelope_start <= 1;
     end
   end
