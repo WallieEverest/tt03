@@ -31,11 +31,11 @@ module chiptune (
     .apu_reg_0(apu_reg[0]),
     .apu_reg_1(apu_reg[1]),
     .apu_reg_2(apu_reg[2]),
-    .apu_reg_3(apu_reg[3]),
-    .apu_reg_4(),
-    .apu_reg_5(),
-    .apu_reg_6(),
-    .apu_reg_7()
+    .apu_reg_3(apu_reg[3])
+    // .apu_reg_4(),
+    // .apu_reg_5(),
+    // .apu_reg_6(),
+    // .apu_reg_7()
   );
 
   frame_counter frame_counter_inst (

@@ -6,11 +6,11 @@ module decoder (
   output reg  [7:0] apu_reg_0 = 0,
   output reg  [7:0] apu_reg_1 = 0,
   output reg  [7:0] apu_reg_2 = 0,
-  output reg  [7:0] apu_reg_3 = 0,
-  output reg  [7:0] apu_reg_4 = 0,
-  output reg  [7:0] apu_reg_5 = 0,
-  output reg  [7:0] apu_reg_6 = 0,
-  output reg  [7:0] apu_reg_7 = 0
+  output reg  [7:0] apu_reg_3 = 0
+  // output reg  [7:0] apu_reg_4 = 0,
+  // output reg  [7:0] apu_reg_5 = 0,
+  // output reg  [7:0] apu_reg_6 = 0,
+  // output reg  [7:0] apu_reg_7 = 0
 );
 
   localparam WIDTH = 10;  // number of bits in message
@@ -20,7 +20,7 @@ module decoder (
 
   reg  [WIDTH-1:0] shift = IDLE;  // default to IDLE pattern
   wire [WIDTH-1:0] next_shift = {sdi, shift[WIDTH-1:1]};  // right-shift and get next TDI bit
-  wire [3:0] addr = shift[WIDTH-2:5];  // address is upper nibble
+  wire [2:0] addr = shift[WIDTH-3:5];  // address is upper nibble
   wire [3:0] data = shift[WIDTH-6:1];  // data is lower nibble
   reg  [3:0] hold = 0;
   reg  [3:0] bit_count = 0;
@@ -42,10 +42,10 @@ module decoder (
         3:  apu_reg_1 <= {data, hold};
         5:  apu_reg_2 <= {data, hold};
         7:  apu_reg_3 <= {data, hold};
-        9:  apu_reg_4 <= {data, hold};
-        11: apu_reg_5 <= {data, hold};
-        13: apu_reg_6 <= {data, hold};
-        15: apu_reg_7 <= {data, hold};
+        // 9:  apu_reg_4 <= {data, hold};
+        // 11: apu_reg_5 <= {data, hold};
+        // 13: apu_reg_6 <= {data, hold};
+        // 15: apu_reg_7 <= {data, hold};
       endcase
     end
   end
