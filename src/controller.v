@@ -24,10 +24,10 @@ module controller (
 ) /* synthesis syn_hier="fixed" */;
 
   // DEBUG faked signal assignments
-  assign o_pins = i_pins;
-  assign tck = rtck;
-  assign tms = addr & reset & clk;
-  assign tdi = tdo;
+  assign o_pins = 0; //i_pins;
+  assign tck = 0; //rtck;
+  assign tms = 0; //addr & reset & clk;
+  assign tdi = 0; //tdo;
 
 // always @(posedge clk) begin
 //   if (reset) begin
